@@ -1,0 +1,471 @@
+/* ========== 基礎樣式 ========== */
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  user-select: none;
+  cursor: default;
+}
+
+/* ========== 容器樣式 ========== */
+.container {
+  width: calc(1080px/2);
+  height: calc(1920px/2);
+  background-image: url('frame.png');
+  background-size: cover;
+  background-position: center;
+  background-color: #8ac4ff;
+  position: relative;
+  margin: 0 auto;
+  border: 3px solid #333;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-2px);
+}
+
+/* ========== 遊戲界面 ========== */
+.game-header {
+  position: absolute;
+  width: 80%;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,240,240,0.9));
+  padding: 15px 25px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0;
+  color: #333;
+}
+
+.score h3 {
+  margin: 0 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.timer {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  color: white;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-weight: bold;
+  margin: 0 10px;
+  box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+  animation: pulse 2s infinite;
+}
+
+.title {
+  position: absolute;
+  width: 80%;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,240,240,0.9));
+  padding: 20px 35px;
+  border-radius: 25px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.title:hover {
+  transform: translateX(-50%) translateY(-5px);
+}
+
+.title h1 {
+  color: #333;
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.title p {
+  color: #666;
+  margin: 0;
+  font-size: 16px;
+}
+
+/* ========== 遊戲元素 ========== */
+.baseket {
+  width: 180px;
+  height: 180px;
+  background-image: url('basket.png');
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 8;
+  transition: all 0.3s ease;
+}
+
+.baseket.level-1 {
+  width: 220px;
+  height: 220px;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.basket-in {
+  width: 180px;
+  height: 180px;
+  background-image: url('BASKET-IN.png');
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 25;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.basket-in.level-1 {
+  width: 220px;
+  height: 220px;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.basket-in.show {
+  opacity: 1;
+}
+
+.basket-area {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 60px;
+  z-index: 5;
+}
+
+.ball {
+  width: 80px;
+  height: 80px;
+  background-image: url('ball.png');
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 15;
+  border-radius: 50%;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  filter: brightness(1.1) contrast(1.1);
+}
+
+.ball:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+  filter: brightness(1.2) contrast(1.2);
+}
+
+.ball.dragging {
+  cursor: grabbing;
+  z-index: 30;
+  transform: translate(-50%, -50%) scale(1.1) rotate(15deg);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+}
+
+.ball.shooting {
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+}
+
+.desk {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 58%;
+  height: 78px;
+  z-index: 10;
+}
+
+/* ========== 力度指示器 ========== */
+.power-indicator {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  height: 25px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+  border-radius: 15px;
+  border: 2px solid rgba(255,255,255,0.4);
+  display: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  backdrop-filter: blur(5px);
+}
+
+.power-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A, #FFC107, #FF9800, #FF5722);
+  border-radius: 12px;
+  width: 0%;
+  transition: width 0.1s ease-out;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.power-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: powerShine 1.5s infinite;
+}
+
+/* ========== 特效元素 ========== */
+.score-popup {
+  position: absolute;
+  font-size: 28px;
+  font-weight: bold;
+  color: #4CAF50;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  pointer-events: none;
+  z-index: 100;
+  animation: scorePopup 1.2s ease-out forwards;
+  font-family: 'Arial Black', sans-serif;
+}
+
+.ball-trail {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,140,0,0.3), transparent);
+  pointer-events: none;
+  animation: trailFade 0.5s ease-out forwards;
+  z-index: 5;
+}
+
+.combo-text {
+  position: absolute;
+  font-size: 20px;
+  font-weight: bold;
+  color: #FF6B35;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+  pointer-events: none;
+  z-index: 101;
+  animation: comboFloat 1s ease-out forwards;
+}
+
+.screen-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(76, 175, 80, 0.3);
+  pointer-events: none;
+  z-index: 999;
+  animation: screenFlash 0.3s ease-out forwards;
+}
+
+.success-ripple {
+  border: 4px solid #4CAF50 !important;
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.3);
+}
+
+/* ========== 模態框 ========== */
+.game-over-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  max-width: 400px;
+  width: 90%;
+}
+
+.modal-content h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.restart-btn {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  padding: 15px 35px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.restart-btn:hover {
+  background: linear-gradient(135deg, #45a049, #3d8b40);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6);
+}
+
+.restart-btn:active {
+  transform: translateY(0);
+}
+
+.restart-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.restart-btn:hover::before {
+  left: 100%;
+}
+
+/* ========== 動畫效果 ========== */
+@keyframes pulse {
+  0% { box-shadow: 0 4px 15px rgba(255,107,107,0.4); }
+  50% { box-shadow: 0 4px 20px rgba(255,107,107,0.7); }
+  100% { box-shadow: 0 4px 15px rgba(255,107,107,0.4); }
+}
+
+@keyframes powerShine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes scorePopup {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(0.5);
+  }
+  25% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) scale(1.5);
+  }
+}
+
+@keyframes basketShake {
+  0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+  10% { transform: translate(-50%, -50%) rotate(2deg) scale(1.02); }
+  20% { transform: translate(-50%, -50%) rotate(-2deg) scale(1.02); }
+  30% { transform: translate(-50%, -50%) rotate(2deg) scale(1.02); }
+  40% { transform: translate(-50%, -50%) rotate(-2deg) scale(1.02); }
+  50% { transform: translate(-50%, -50%) rotate(1deg) scale(1.01); }
+  60% { transform: translate(-50%, -50%) rotate(-1deg) scale(1.01); }
+  70% { transform: translate(-50%, -50%) rotate(1deg) scale(1.01); }
+  80% { transform: translate(-50%, -50%) rotate(-1deg) scale(1.01); }
+  90% { transform: translate(-50%, -50%) rotate(0deg) scale(1.01); }
+}
+
+@keyframes basketShakeMoving {
+  0%, 100% { transform: var(--current-transform) rotate(0deg); }
+  10% { transform: var(--current-transform) rotate(2deg) scale(1.02); }
+  20% { transform: var(--current-transform) rotate(-2deg) scale(1.02); }
+  30% { transform: var(--current-transform) rotate(2deg) scale(1.02); }
+  40% { transform: var(--current-transform) rotate(-2deg) scale(1.02); }
+  50% { transform: var(--current-transform) rotate(1deg) scale(1.01); }
+  60% { transform: var(--current-transform) rotate(-1deg) scale(1.01); }
+  70% { transform: var(--current-transform) rotate(1deg) scale(1.01); }
+  80% { transform: var(--current-transform) rotate(-1deg) scale(1.01); }
+  90% { transform: var(--current-transform) rotate(0deg) scale(1.01); }
+}
+
+@keyframes rippleEffect {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@keyframes trailFade {
+  0% { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.3); }
+}
+
+@keyframes comboFloat {
+  0% { opacity: 1; transform: translateY(0) scale(0.8); }
+  50% { opacity: 1; transform: translateY(-30px) scale(1.1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(1); }
+}
+
+@keyframes screenFlash {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes levelUpFloat {
+  0% { 
+    opacity: 0; 
+    transform: translate(-50%, -50%) scale(0.5); 
+  }
+  25% { 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(1.2); 
+  }
+  75% { 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(1); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translate(-50%, -50%) scale(0.8); 
+  }
+}

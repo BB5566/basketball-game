@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🏀 投籃機遊戲 - Basketball Game</title>
+    <meta name="description" content="互動式投籃機遊戲，三個關卡挑戰，支援觸控操作" />
+    
+    <!-- 載入 Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/css/bootstrap.min.css"
+      integrity="sha512-fw7f+TcMjTb7bpbLJZlP8uy8HsRZsH/SwbMw0plKHFHr99DN3l04VsYNwvzicUX/6qurvIxbxw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    
+    <!-- 載入自定義樣式 -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <!-- 遊戲主容器 -->
+    <div class="container">
+      <!-- 遊戲頭部信息 -->
+      <header class="game-header">
+        <div class="score">
+          <h3>關卡: <span id="level">1</span></h3>
+          <h3>分數: <span id="score">0</span></h3>
+          <div class="timer">時間: <span id="timer">120</span>s</div>
+          <h3>最高分: <span id="top-score">0</span></h3>
+        </div>
+      </header>
+      
+      <!-- 遊戲元素 -->
+      <div class="baseket" aria-label="籃框"></div>
+      <div class="basket-in" id="basket-in" aria-label="進籃效果"></div>
+      <div class="basket-area" id="basket-area"></div>
+      <div class="ball" id="ball" aria-label="籃球" tabindex="0"></div>
+      <div class="desk" aria-label="桌面"></div>
+      
+      <!-- 力度指示器 -->
+      <div class="power-indicator" id="power-indicator" aria-label="投球力度">
+        <div class="power-bar" id="power-bar"></div>
+      </div>
+      
+      <!-- 遊戲說明 -->
+      <div class="title">
+        <h1>🏀 投籃機遊戲</h1>
+        <p>拖拽投籃得分！第一關有大籃框幫助練習！<br>
+        <small style="color: #888; font-size: 14px;">💡 瞄準籃框頂部投球效果最佳</small></p>
+      </div>
+    </div>
+
+    <!-- 遊戲結束模態框 -->
+    <div class="game-over-modal" id="game-over-modal" role="dialog" aria-labelledby="game-over-title">
+      <div class="modal-content">
+        <h2 id="game-over-title">🎉 遊戲結束！</h2>
+        <p><strong>您的分數:</strong> <span id="final-score" style="color: #4CAF50; font-size: 24px; font-weight: bold;">0</span></p>
+        <p><strong>最高分數:</strong> <span id="final-top-score" style="color: #FF6B35; font-size: 20px; font-weight: bold;">0</span></p>
+        <p style="color: #666; font-size: 14px; margin-top: 15px;">💡 技巧：瞄準籃框頂部，連續命中可獲得額外獎勵！</p>
+        <button class="restart-btn" onclick="restartGame()" aria-label="重新開始遊戲">🏀 再玩一次</button>
+      </div>
+    </div>
+
+    <!-- 載入 Bootstrap JS -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/js/bootstrap.bundle.min.js"
+      integrity="sha512-Tc0i+vRogmX4NN7tuLbQfBxa8JkfUSAxSFVzmU31nVdHyiHElPPy2cWfFacmCJKw0VqovrzKhdd2TSTMdAxp2g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <!-- 載入 jQuery -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <!-- 載入遊戲邏輯 -->
+    <script src="game.js"></script>
+  </body>
+</html>
