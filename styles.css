@@ -115,14 +115,14 @@ body {
   top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 8;
-  transition: all 0.3s ease;
+  z-index: 10; /* 籃框在底層 */
+  transition: all 0.3s ease; /* 添加過渡效果 */
 }
 
 .baseket.level-1 {
-  width: 220px;
+  width: 220px; /* 第一關籃框放大 */
   height: 220px;
-  transform: translate(-50%, -50%) scale(1.1);
+  transform: translate(-50%, -50%) scale(1.1); /* 額外放大效果 */
 }
 
 .basket-in {
@@ -135,14 +135,14 @@ body {
   top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 25;
+  z-index: 20; /* 進籃效果在最上層 */
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
 
 .basket-in.level-1 {
-  width: 220px;
+  width: 220px; /* 第一關進籃效果也要放大 */
   height: 220px;
   transform: translate(-50%, -50%) scale(1.1);
 }
@@ -173,7 +173,7 @@ body {
   transform: translate(-50%, -50%);
   cursor: grab;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 15;
+  z-index: 15; /* 球在中間層 */
   border-radius: 50%;
   box-shadow: 0 8px 25px rgba(0,0,0,0.3);
   filter: brightness(1.1) contrast(1.1);
@@ -379,6 +379,24 @@ body {
 
 .restart-btn:hover::before {
   left: 100%;
+}
+
+/* ========== 投擲預覽軌道 ========== */
+.guide-line-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 14;
+}
+
+.guide-line-svg path {
+  stroke: rgba(255,255,255,0.8);
+  stroke-width: 4;
+  fill: none;
+  stroke-dasharray: 5 5;
 }
 
 /* ========== 動畫效果 ========== */

@@ -296,6 +296,12 @@ class BasketballGame {
     this.startPos = { x: 0, y: 0 };
     this.powerLevel = 0;
 
+    // 初始化背景音樂
+    this.bgMusic = new Audio('sound.mp3');
+    this.bgMusic.preload = 'auto';
+    this.bgMusic.loop = true;
+    this.bgMusic.volume = 0.5;
+
     this.init();
   }
 
@@ -303,6 +309,10 @@ class BasketballGame {
     this.updateUI();
     this.setupEventListeners();
     this.startGameTimer();
+    // 開始播放背景音樂
+    this.bgMusic.play();
+    // 隱藏拋物線預覽
+    $('#guide-line').hide();
   }
 
   updateUI() {
@@ -363,6 +373,10 @@ class BasketballGame {
       this.basketController.updateSize(this.state.currentLevel);
       $("#level").text(this.state.currentLevel);
       EffectSystem.showLevelUpMessage(this.state.currentLevel);
+      // 第一關後隱藏遊戲說明
+      if (this.state.currentLevel > 1) {
+        $('.title').hide();
+      }
 
       if (this.state.currentLevel >= 2) {
         this.state.basketMoving = true;
@@ -385,6 +399,9 @@ class BasketballGame {
   handleBasketHit(ballX, ballY) {
     const basket = $(".baseket");
     const basketIn = $("#basket-in");
+
+    // 讓球在籃框和特效之間，實現入網效果
+    $("#ball").css("z-index", 18);
 
     basketIn.css("transform", basket.css("transform")).addClass("show");
 
@@ -415,11 +432,13 @@ class BasketballGame {
       basketCenterY - 100
     );
     EffectSystem.showSuccessEffect(basketCenterX, basketCenterY);
+    // 隱藏導引線並立即重置球位置
+    $('#guide-line').hide();
+    this.resetBallPosition();
 
     this.basketController.shake(this.state.basketMoving);
     this.checkLevelUp();
 
-    setTimeout(() => this.resetBallPosition(), 1800);
   }
 
   /**
@@ -663,6 +682,7 @@ class BasketballGame {
       transform: "translate(-50%, -50%)",
       transition: "all 0.3s ease",
       opacity: "1",
+      "z-index": 15, // 恢復球的 z-index
     });
   }
 
@@ -689,6 +709,8 @@ class BasketballGame {
       opacity: 0.7,
       transform: 'rotate(0deg) scale(1)'
     });
+    // 顯示拋物線預覽
+    $('#guide-line').show();
   }
 
   handleBallMove(e) {
@@ -712,6 +734,19 @@ class BasketballGame {
       transform: `rotate(${angle}deg) scale(${1 + this.powerLevel / 200})`,
       opacity: 0.7 + (this.powerLevel / 100) * 0.3
     });
+    // 計算並更新拋物線路徑預覽
+    const ballRect = $('#ball')[0].getBoundingClientRect();
+    const containerRect = $('.container')[0].getBoundingClientRect();
+    const startX = ballRect.left - containerRect.left + ballRect.width / 2;
+    const startY = ballRect.top - containerRect.top + ballRect.height / 2;
+    let targetX = this.startPos.x - containerRect.left - deltaX * 2;
+    let targetY = this.startPos.y - containerRect.top - deltaY * 2;
+    targetX = Math.max(50, Math.min(targetX, containerRect.width - 50));
+    targetY = Math.max(50, Math.min(targetY, containerRect.height - 200));
+    const dist = Math.hypot(targetX - startX, targetY - startY);
+    const traj = this.physics.calculateTrajectory(startX, startY, targetX, targetY, this.powerLevel, dist);
+    const pathD = `M${startX},${startY} L${targetX},${targetY}`;
+    $('#guide-line-path').attr('d', pathD);
   }
 
   handleBallEnd(e) {
@@ -723,6 +758,8 @@ class BasketballGame {
     $('#power-indicator').hide();
     $('#arrow-indicator').css('opacity', 0); // 隱藏箭頭
     $('#ball').removeClass('dragging');
+    // 隱藏並清除拋物線預覽
+    $('#guide-line').hide();
     
     const clientX = e.type === 'touchend' ? e.originalEvent.changedTouches[0].clientX : e.clientX;
     const clientY = e.type === 'touchend' ? e.originalEvent.changedTouches[0].clientY : e.clientY;
