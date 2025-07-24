@@ -204,7 +204,22 @@ body {
   transform: translateX(-50%);
   width: 58%;
   height: 78px;
-  z-index: 10;
+  z-index: 10; /* 桌面在中間層 */
+}
+
+.arrow-indicator {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-image: url('https://img.icons8.com/ios-filled/100/ffffff/long-arrow-up.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 12; /* 在球下方 */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.7));
 }
 
 /* ========== 力度指示器 ========== */
