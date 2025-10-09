@@ -1,15 +1,47 @@
 /**
- * 投籃機遊戲 - 主要遊戲邏輯 (重構版)
+ * 投籃機遊戲 - 主要遊戲邏輯 (優化版)
  * 功能：三關卡投籃遊戲，包含移動籃框、特效系統、分數計算等
- * 優化：簡化遊戲難度、提升代碼可讀性、優化使用者體驗
+ * 優化：效能優化、資源管理、教學系統、錯誤處理
  */
+
+// ========== 遊戲配置常數 ==========
+const GAME_CONFIG = {
+  INITIAL_TIME: 150,
+  LEVEL_THRESHOLDS: { 1: 15, 2: 35 },
+  SCORE_SETTINGS: {
+    BASE_POINTS: 10,
+    COMBO_MULTIPLIER: 3,
+    LEVEL_BONUS_MULTIPLIER: 2
+  },
+  BASKET_RANGES: {
+    1: 380,
+    2: 280,
+    3: 230
+  },
+  BASKET_MOVEMENT: {
+    2: { speed: 0.6, range: 15 },
+    3: { speed: 0.9, range: 25 }
+  },
+  PHYSICS: {
+    MIN_FLIGHT_TIME: 700,
+    MAX_FLIGHT_TIME: 1400,
+    FLIGHT_TIME_MULTIPLIER: 2.5,
+    MIN_PEAK_HEIGHT: 120,
+    MAX_PEAK_HEIGHT: 350,
+    PEAK_HEIGHT_POWER_MULTIPLIER: 2.5,
+    PEAK_HEIGHT_DISTANCE_MULTIPLIER: 0.4
+  },
+  SOUND_VOLUME: 0.3,
+  COMBO_TIMEOUT: 3000,
+  MIN_DRAG_DISTANCE: 20
+};
 
 // ========== 遊戲狀態管理 ==========
 class GameState {
   constructor() {
     this.score = 0;
     this.topScore = localStorage.getItem("topScore") || 0;
-    this.timeLeft = 150; // 增加遊戲時間
+    this.timeLeft = GAME_CONFIG.INITIAL_TIME;
     this.gameActive = false;
     this.gameTimer = null;
     this.currentLevel = 1;
@@ -89,11 +121,13 @@ class GameState {
 
   reset() {
     this.score = 0;
-    this.timeLeft = 150; // 重置時也使用新的時間
+    this.timeLeft = GAME_CONFIG.INITIAL_TIME;
     this.currentLevel = 1;
     this.basketMoving = false;
     this.consecutiveHits = 0;
     this.gameActive = false;
+    this.stats.totalShots = 0;
+    this.stats.successfulShots = 0;
     if (this.gameTimer) {
       clearInterval(this.gameTimer);
       this.gameTimer = null;
@@ -121,11 +155,17 @@ class BallPhysics {
    * @returns {object} 包含飛行時間和頂點座標的物件
    */
   calculateTrajectory(startX, startY, targetX, targetY, power, distance) {
-    // 簡化計算，讓軌跡更可預測
-    const flightTime = Math.max(700, Math.min(1400, distance * 2.5));
+    const cfg = GAME_CONFIG.PHYSICS;
+    const flightTime = Math.max(
+      cfg.MIN_FLIGHT_TIME,
+      Math.min(cfg.MAX_FLIGHT_TIME, distance * cfg.FLIGHT_TIME_MULTIPLIER)
+    );
     const peakHeight = Math.max(
-      120,
-      Math.min(350, power * 2.5 + distance * 0.4)
+      cfg.MIN_PEAK_HEIGHT,
+      Math.min(
+        cfg.MAX_PEAK_HEIGHT,
+        power * cfg.PEAK_HEIGHT_POWER_MULTIPLIER + distance * cfg.PEAK_HEIGHT_DISTANCE_MULTIPLIER
+      )
     );
 
     return {
@@ -145,15 +185,7 @@ class BallPhysics {
       Math.pow(targetX - basketCenterX, 2) +
         Math.pow(targetY - basketCenterY, 2)
     );
-
-    // 擴大所有關卡的投籃判定區域，讓遊戲更友好
-    const ranges = {
-      1: 380, // 第一關非常寬鬆
-      2: 280, // 第二關依然寬鬆
-      3: 230, // 第三關更具挑戰性，但仍比之前容易
-    };
-
-    return distance <= (ranges[level] || 260);
+    return distance <= (GAME_CONFIG.BASKET_RANGES[level] || 260);
   }
 
   /**
@@ -276,43 +308,51 @@ class EffectSystem {
 // ========== 籃框控制器 ==========
 class BasketController {
   constructor() {
-    this.moveInterval = null;
+    this.animationFrame = null;
     this.direction = 1;
     this.currentOffset = 0;
+    this.lastTimestamp = 0;
   }
 
   startMovement(level) {
-    if (this.moveInterval) return;
+    if (this.animationFrame) return;
 
     const basket = $(".baseket");
     const basketIn = $("#basket-in");
     const basketArea = $("#basket-area");
 
-    const config = {
-      2: { speed: 0.6, range: 15 },
-      3: { speed: 0.9, range: 25 },
-    };
+    const config = GAME_CONFIG.BASKET_MOVEMENT[level] || GAME_CONFIG.BASKET_MOVEMENT[2];
+    const { speed, range } = config;
 
-    const { speed, range } = config[level] || config[2];
+    const animate = (timestamp) => {
+      if (!this.lastTimestamp) this.lastTimestamp = timestamp;
+      const delta = timestamp - this.lastTimestamp;
+      this.lastTimestamp = timestamp;
 
-    this.moveInterval = setInterval(() => {
-      this.currentOffset += this.direction * speed;
+      // 使用時間增量讓動畫更流暢（60fps 標準）
+      const normalizedSpeed = speed * (delta / 16.67);
+      this.currentOffset += this.direction * normalizedSpeed;
 
       if (Math.abs(this.currentOffset) >= range) {
         this.direction *= -1;
+        this.currentOffset = Math.sign(this.currentOffset) * range;
       }
 
       const newTransform = `translate(calc(-50% + ${this.currentOffset}%), -50%)`;
       basket.css("transform", newTransform);
       basketIn.css("transform", newTransform);
       basketArea.css("transform", newTransform);
-    }, 25);
+
+      this.animationFrame = requestAnimationFrame(animate);
+    };
+
+    this.animationFrame = requestAnimationFrame(animate);
   }
 
   stopMovement() {
-    if (this.moveInterval) {
-      clearInterval(this.moveInterval);
-      this.moveInterval = null;
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame);
+      this.animationFrame = null;
     }
 
     const resetTransform = "translate(-50%, -50%)";
@@ -320,6 +360,11 @@ class BasketController {
 
     this.currentOffset = 0;
     this.direction = 1;
+    this.lastTimestamp = 0;
+  }
+
+  cleanup() {
+    this.stopMovement();
   }
 
   updateSize(level) {
@@ -355,37 +400,118 @@ class BasketController {
   }
 }
 
+// ========== 教學系統 ==========
+class TutorialSystem {
+  constructor() {
+    this.shown = localStorage.getItem('tutorialShown') === 'true';
+  }
+
+  show() {
+    if (this.shown) return;
+
+    const tutorial = $(`
+      <div class="tutorial-overlay">
+        <div class="tutorial-content">
+          <h2>🏀 遊戲教學</h2>
+          <div class="tutorial-steps">
+            <div class="tutorial-step">
+              <span class="step-icon">👆</span>
+              <p><strong>拖拽投球</strong><br>按住籃球向下拖拽</p>
+            </div>
+            <div class="tutorial-step">
+              <span class="step-icon">🎯</span>
+              <p><strong>瞄準籃框</strong><br>拖拽方向相反處即為投球方向</p>
+            </div>
+            <div class="tutorial-step">
+              <span class="step-icon">💪</span>
+              <p><strong>控制力度</strong><br>拖拽越遠，投球力度越大</p>
+            </div>
+            <div class="tutorial-step">
+              <span class="step-icon">🔥</span>
+              <p><strong>連擊獎勵</strong><br>連續命中可獲得額外分數</p>
+            </div>
+          </div>
+          <button class="tutorial-close-btn">開始遊戲</button>
+          <label class="tutorial-checkbox">
+            <input type="checkbox" id="dont-show-again"> 不再顯示
+          </label>
+        </div>
+      </div>
+    `);
+
+    $('body').append(tutorial);
+
+    setTimeout(() => tutorial.addClass('show'), 100);
+
+    tutorial.find('.tutorial-close-btn').on('click', () => {
+      if ($('#dont-show-again').is(':checked')) {
+        localStorage.setItem('tutorialShown', 'true');
+        this.shown = true;
+      }
+      tutorial.removeClass('show');
+      setTimeout(() => tutorial.remove(), 300);
+    });
+  }
+
+  reset() {
+    localStorage.removeItem('tutorialShown');
+    this.shown = false;
+  }
+}
+
 // ========== 主遊戲類 ==========
 class BasketballGame {
   constructor() {
     this.state = new GameState();
     this.physics = new BallPhysics();
     this.basketController = new BasketController();
+    this.tutorial = new TutorialSystem();
     this.isDragging = false;
     this.startPos = { x: 0, y: 0 };
     this.powerLevel = 0;
+    this.boundaryCheckInterval = null;
 
     // 初始化音效系統
-    this.sounds = {
-      shoot: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'),
-      score: new Audio('https://assets.mixkit.co/active_storage/sfx/1434/1434-preview.mp3'),
-      miss: new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3'),
-      levelUp: new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3')
-    };
-
-    // 設置音量
-    Object.values(this.sounds).forEach(sound => {
-      sound.volume = 0.3;
-      sound.preload = 'auto';
-    });
+    this.sounds = {};
+    this.initSounds();
 
     this.init();
   }
 
+  initSounds() {
+    const soundUrls = {
+      shoot: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3',
+      score: 'https://assets.mixkit.co/active_storage/sfx/1434/1434-preview.mp3',
+      miss: 'https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3',
+      levelUp: 'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3'
+    };
+
+    Object.entries(soundUrls).forEach(([name, url]) => {
+      try {
+        const audio = new Audio(url);
+        audio.volume = GAME_CONFIG.SOUND_VOLUME;
+        audio.preload = 'auto';
+        audio.addEventListener('error', () => {
+          console.warn(`Failed to load sound: ${name}`);
+          this.sounds[name] = null;
+        });
+        this.sounds[name] = audio;
+      } catch (e) {
+        console.warn(`Error initializing sound: ${name}`, e);
+        this.sounds[name] = null;
+      }
+    });
+  }
+
   playSound(soundName) {
-    if (this.sounds[soundName]) {
-      this.sounds[soundName].currentTime = 0;
-      this.sounds[soundName].play().catch(e => console.log('Audio play failed:', e));
+    const sound = this.sounds[soundName];
+    if (sound) {
+      try {
+        sound.currentTime = 0;
+        sound.play().catch(e => console.warn(`Audio play failed for ${soundName}:`, e));
+      } catch (e) {
+        console.warn(`Error playing sound ${soundName}:`, e);
+      }
     }
   }
 
@@ -393,8 +519,10 @@ class BasketballGame {
     this.updateUI();
     this.setupEventListeners();
     this.startGameTimer();
-    // 隱藏拋物線預覽
     $('#guide-line').hide();
+
+    // 顯示教學
+    setTimeout(() => this.tutorial.show(), 500);
   }
 
   updateUI() {
@@ -406,11 +534,40 @@ class BasketballGame {
   }
 
   setupEventListeners() {
-    $("#ball").on("mousedown touchstart", (e) => this.handleBallStart(e));
-    $(document).on("mousemove touchmove", (e) => this.handleBallMove(e));
-    $(document).on("mouseup touchend", (e) => this.handleBallEnd(e));
-    $(document).on("dragstart", (e) => e.preventDefault());
+    const $ball = $("#ball");
+    const $doc = $(document);
+
+    $ball.on("mousedown.game touchstart.game", (e) => this.handleBallStart(e));
+    $doc.on("mousemove.game touchmove.game", (e) => this.handleBallMove(e));
+    $doc.on("mouseup.game touchend.game", (e) => this.handleBallEnd(e));
+    $doc.on("dragstart.game", (e) => e.preventDefault());
+
     window.restartGame = () => this.restart();
+  }
+
+  cleanup() {
+    // 清理所有事件監聽器
+    $("#ball").off(".game");
+    $(document).off(".game");
+
+    // 清理計時器和動畫
+    if (this.state.gameTimer) {
+      clearInterval(this.state.gameTimer);
+    }
+    if (this.boundaryCheckInterval) {
+      clearInterval(this.boundaryCheckInterval);
+    }
+
+    // 清理籃框動畫
+    this.basketController.cleanup();
+
+    // 清理音效
+    Object.values(this.sounds).forEach(sound => {
+      if (sound) {
+        sound.pause();
+        sound.currentTime = 0;
+      }
+    });
   }
 
   startGameTimer() {
@@ -447,15 +604,14 @@ class BasketballGame {
   }
 
   checkLevelUp() {
-    const thresholds = { 1: 15, 2: 35 };
-    const threshold = thresholds[this.state.currentLevel];
+    const threshold = GAME_CONFIG.LEVEL_THRESHOLDS[this.state.currentLevel];
 
     if (threshold && this.state.score >= threshold) {
       this.state.currentLevel++;
       this.basketController.updateSize(this.state.currentLevel);
       $("#level").text(this.state.currentLevel);
       EffectSystem.showLevelUpMessage(this.state.currentLevel);
-      // 第一關後隱藏遊戲說明
+
       if (this.state.currentLevel > 1) {
         $('.title').hide();
       }
@@ -465,24 +621,22 @@ class BasketballGame {
         this.basketController.startMovement(this.state.currentLevel);
       }
 
-      // 播放升級音效
       this.playSound('levelUp');
 
-      // 檢查關卡成就
       this.state.checkAchievement('level2');
       this.state.checkAchievement('level3');
     }
   }
 
   /**
-   * 計算得分 (簡化版)
+   * 計算得分
    * @returns {number}
    */
   calculateScore() {
-    const basePoints = 10; // 固定基礎分
-    const comboBonus = Math.max(0, (this.state.consecutiveHits - 1) * 3);
-    const levelBonus = (this.state.currentLevel - 1) * 2;
-    return basePoints + comboBonus + levelBonus;
+    const cfg = GAME_CONFIG.SCORE_SETTINGS;
+    const comboBonus = Math.max(0, (this.state.consecutiveHits - 1) * cfg.COMBO_MULTIPLIER);
+    const levelBonus = (this.state.currentLevel - 1) * cfg.LEVEL_BONUS_MULTIPLIER;
+    return cfg.BASE_POINTS + comboBonus + levelBonus;
   }
 
   handleBasketHit(ballX, ballY) {
@@ -505,7 +659,7 @@ class BasketballGame {
 
     const currentTime = Date.now();
     this.state.consecutiveHits =
-      currentTime - this.state.lastHitTime < 3000
+      currentTime - this.state.lastHitTime < GAME_CONFIG.COMBO_TIMEOUT
         ? this.state.consecutiveHits + 1
         : 1;
     this.state.lastHitTime = currentTime;
@@ -673,12 +827,15 @@ class BasketballGame {
       transform: `translate(0, 0) rotate(${power * 3}deg) scale(0.8)`,
     });
 
-    const boundaryCheck = setInterval(() => {
+    // 使用 requestAnimationFrame 檢查邊界
+    const checkBoundary = () => {
       if (this.isBallOutOfBounds(ball, containerRect)) {
-        clearInterval(boundaryCheck);
         this.handleBallOutOfBounds();
+        return;
       }
-    }, 30);
+      this.boundaryCheckInterval = requestAnimationFrame(checkBoundary);
+    };
+    this.boundaryCheckInterval = requestAnimationFrame(checkBoundary);
 
     setTimeout(() => {
       if (ball.css("opacity") === "0") return;
@@ -691,7 +848,10 @@ class BasketballGame {
     }, trajectory.flightTime * 0.3);
 
     setTimeout(() => {
-      clearInterval(boundaryCheck);
+      if (this.boundaryCheckInterval) {
+        cancelAnimationFrame(this.boundaryCheckInterval);
+        this.boundaryCheckInterval = null;
+      }
       this.checkShotResult(ball, containerRect);
     }, trajectory.flightTime);
   }
@@ -879,20 +1039,17 @@ class BasketballGame {
     const deltaY = clientY - this.startPos.y;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-    if (distance > 20) {
-      // 最小拖拽距離
+    if (distance > GAME_CONFIG.MIN_DRAG_DISTANCE) {
       const containerRect = $(".container")[0].getBoundingClientRect();
-      // 投擲方向與拖拽方向相反
       let targetX = this.startPos.x - containerRect.left - deltaX * 2;
       let targetY = this.startPos.y - containerRect.top - deltaY * 2;
 
-      // 限制投擲範圍在容器內
       targetX = Math.max(50, Math.min(targetX, containerRect.width - 50));
-      targetY = Math.max(50, Math.min(targetY, containerRect.height - 200)); // 避免投太高
+      targetY = Math.max(50, Math.min(targetY, containerRect.height - 200));
 
       this.shootBall(targetX, targetY, this.powerLevel);
     } else {
-      this.resetBallPosition(); // 如果拖拽距離太短，則不投球
+      this.resetBallPosition();
     }
   }
 }

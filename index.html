@@ -4,8 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🏀 投籃機遊戲 - Basketball Game</title>
-    <meta name="description" content="互動式投籃機遊戲，三個關卡挑戰，支援觸控操作" />
-    
+    <meta
+      name="description"
+      content="互動式投籃機遊戲，三個關卡挑戰，支援觸控操作"
+    />
+
     <!-- 載入 Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -14,7 +17,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    
+
     <!-- 載入自定義樣式 -->
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -31,7 +34,7 @@
           <h3>最高分: <span id="top-score">0</span></h3>
         </div>
       </header>
-      
+
       <!-- 遊戲元素 -->
       <div class="baseket" aria-label="籃框"></div>
       <div class="basket-in" id="basket-in" aria-label="進籃效果"></div>
@@ -39,35 +42,70 @@
       <div class="ball" id="ball" aria-label="籃球" tabindex="0"></div>
       <svg class="guide-line-svg" id="guide-line">
         <defs>
-          <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <marker
+            id="arrowhead"
+            markerWidth="10"
+            markerHeight="10"
+            refX="8"
+            refY="3"
+            orient="auto"
+          >
             <polygon points="0 0, 10 3, 0 6" fill="rgba(255,255,255,0.9)" />
           </marker>
         </defs>
         <path id="guide-line-path" marker-end="url(#arrowhead)" />
       </svg>
       <div class="desk" aria-label="桌面"></div>
-      
+
       <!-- 力度指示器 -->
       <div class="power-indicator" id="power-indicator" aria-label="投球力度">
         <div class="power-bar" id="power-bar"></div>
       </div>
-      
+
       <!-- 遊戲說明 -->
       <div class="title">
-        <h1>🏀 投籃機遊戲</h1>
-        <p>拖拽投籃得分！第一關有大籃框幫助練習！<br>
-        <small style="color: #888; font-size: 14px;">💡 瞄準籃框頂部投球效果最佳</small></p>
+        <p>
+          拖拽投籃得分！第一關有大籃框幫助練習！<br />
+          <small>💡 瞄準籃框頂部投球效果最佳</small>
+        </p>
       </div>
     </div>
 
     <!-- 遊戲結束模態框 -->
-    <div class="game-over-modal" id="game-over-modal" role="dialog" aria-labelledby="game-over-title">
+    <div
+      class="game-over-modal"
+      id="game-over-modal"
+      role="dialog"
+      aria-labelledby="game-over-title"
+    >
       <div class="modal-content">
         <h2 id="game-over-title">🎉 遊戲結束！</h2>
-        <p><strong>您的分數:</strong> <span id="final-score" style="color: #4CAF50; font-size: 24px; font-weight: bold;">0</span></p>
-        <p><strong>最高分數:</strong> <span id="final-top-score" style="color: #FF6B35; font-size: 20px; font-weight: bold;">0</span></p>
-        <p style="color: #666; font-size: 14px; margin-top: 15px;">💡 技巧：瞄準籃框頂部，連續命中可獲得額外獎勵！</p>
-        <button class="restart-btn" onclick="restartGame()" aria-label="重新開始遊戲">🏀 再玩一次</button>
+        <p>
+          <strong>您的分數:</strong>
+          <span
+            id="final-score"
+            style="color: #4caf50; font-size: 24px; font-weight: bold"
+            >0</span
+          >
+        </p>
+        <p>
+          <strong>最高分數:</strong>
+          <span
+            id="final-top-score"
+            style="color: #ff6b35; font-size: 20px; font-weight: bold"
+            >0</span
+          >
+        </p>
+        <p style="color: #666; font-size: 14px; margin-top: 15px">
+          💡 技巧：瞄準籃框頂部，連續命中可獲得額外獎勵！
+        </p>
+        <button
+          class="restart-btn"
+          onclick="restartGame()"
+          aria-label="重新開始遊戲"
+        >
+          🏀 再玩一次
+        </button>
       </div>
     </div>
 
