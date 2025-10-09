@@ -542,6 +542,22 @@ class BasketballGame {
     $doc.on("mouseup.game touchend.game", (e) => this.handleBallEnd(e));
     $doc.on("dragstart.game", (e) => e.preventDefault());
 
+    // 點擊球立即恢復位置（用於進籃後快速恢復）
+    $ball.on("click.game", (e) => {
+      const ball = $("#ball");
+      // 如果球不在初始位置（正在動畫中或在籃框中），則立即恢復
+      const currentTop = ball.css("top");
+      const currentLeft = ball.css("left");
+      const initialTop = this.physics.ballOriginalPos.y;
+      const initialLeft = this.physics.ballOriginalPos.x;
+
+      if (currentTop !== initialTop || currentLeft !== initialLeft) {
+        e.stopPropagation();
+        $("#basket-in").removeClass("show");
+        this.resetBallPosition();
+      }
+    });
+
     window.restartGame = () => this.restart();
   }
 
@@ -642,9 +658,7 @@ class BasketballGame {
   handleBasketHit(ballX, ballY) {
     const basket = $(".baseket");
     const basketIn = $("#basket-in");
-
-    // 讓球在籃框和特效之間，實現入網效果
-    $("#ball").css("z-index", 18);
+    const ball = $("#ball");
 
     basketIn.css("transform", basket.css("transform")).addClass("show");
 
@@ -655,7 +669,15 @@ class BasketballGame {
     const basketCenterY =
       basketRect.top - containerRect.top + basketRect.height / 2;
 
-    this.animateBallIntoBasket(basketCenterX, basketCenterY);
+    // 簡短的進籃動畫：球縮小並移動到籃框中心
+    ball.css({
+      transition: "all 0.3s ease-out",
+      left: basketCenterX - 40 + "px",
+      top: basketCenterY - 40 + "px",
+      transform: "scale(0.5) rotate(360deg)",
+      opacity: "0.8",
+      "z-index": 15
+    });
 
     const currentTime = Date.now();
     this.state.consecutiveHits =
@@ -680,9 +702,9 @@ class BasketballGame {
       basketCenterY - 100
     );
     EffectSystem.showSuccessEffect(basketCenterX, basketCenterY);
-    // 隱藏導引線並立即重置球位置
+
+    // 隱藏導引線
     $('#guide-line').hide();
-    this.resetBallPosition();
 
     this.basketController.shake(this.state.basketMoving);
 
@@ -699,71 +721,14 @@ class BasketballGame {
 
     this.checkLevelUp();
 
+    // 0.5秒後自動恢復球的位置，或點擊球立即恢復
+    setTimeout(() => {
+      basketIn.removeClass("show");
+      this.resetBallPosition();
+    }, 500);
+
   }
 
-  /**
-   * 執行球入籃框的動畫序列
-   */
-  animateBallIntoBasket(centerX, centerY) {
-    const ball = $("#ball");
-    const deskRect = $(".desk")[0].getBoundingClientRect();
-    const containerRect = $(".container")[0].getBoundingClientRect();
-    const deskTopY = deskRect.top - containerRect.top;
-
-    // 定義動畫序列
-    const sequence = [
-      {
-        delay: 0,
-        duration: 300,
-        css: {
-          top: centerY - 20 + "px",
-          transform: "scale(0.9) rotate(360deg)",
-        },
-      },
-      {
-        delay: 300,
-        duration: 200,
-        css: { transform: "scale(0.8) rotate(540deg)" },
-      },
-      {
-        delay: 500,
-        duration: 400,
-        css: {
-          top: centerY + 80 + "px",
-          transform: "scale(0.7) rotate(720deg)",
-        },
-      },
-      {
-        delay: 900,
-        duration: 500,
-        css: {
-          top: deskTopY - 40 + "px",
-          transform: "scale(0.6) rotate(900deg)",
-          opacity: 0.8,
-        },
-      },
-      {
-        delay: 1400,
-        duration: 200,
-        css: { transform: "scale(0.7) rotate(1080deg)" },
-      },
-      {
-        delay: 1600,
-        duration: 200,
-        css: { transform: "scale(0.6) rotate(1080deg)", opacity: 0.9 },
-      },
-    ];
-
-    // 執行動畫
-    sequence.forEach((step) => {
-      setTimeout(() => {
-        ball.css({
-          transition: `all ${step.duration}ms ease-in-out`,
-          ...step.css,
-        });
-      }, step.delay);
-    });
-  }
 
   shootBall(targetX, targetY, power) {
     if (!this.state.gameActive) return;

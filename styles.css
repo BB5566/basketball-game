@@ -194,7 +194,7 @@ body {
   top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10; /* 籃框在底層 */
+  z-index: 5; /* 籃框在最底層 */
   transition: all 0.3s ease; /* 添加過渡效果 */
 }
 
@@ -214,7 +214,7 @@ body {
   top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 20; /* 進籃效果在最上層 */
+  z-index: 25; /* 進籃效果在最上層，蓋過球 */
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -252,7 +252,7 @@ body {
   transform: translate(-50%, -50%);
   cursor: grab;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 15; /* 球在中間層 */
+  z-index: 10; /* 球在中間層 */
   border-radius: 50%;
   box-shadow: 0 8px 25px rgba(0,0,0,0.3);
   filter: brightness(1.1) contrast(1.1);
@@ -266,14 +266,14 @@ body {
 
 .ball.dragging {
   cursor: grabbing;
-  z-index: 30;
+  z-index: 10; /* 保持在中間層，不超過 basket-in */
   transform: translate(-50%, -50%) scale(1.1) rotate(15deg);
   box-shadow: 0 15px 40px rgba(0,0,0,0.5);
 }
 
 .ball.shooting {
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  pointer-events: none;
+  cursor: pointer;
 }
 
 .desk {
