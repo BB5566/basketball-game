@@ -37,7 +37,14 @@
       <div class="basket-in" id="basket-in" aria-label="進籃效果"></div>
       <div class="basket-area" id="basket-area"></div>
       <div class="ball" id="ball" aria-label="籃球" tabindex="0"></div>
-      <svg class="guide-line-svg" id="guide-line"><path id="guide-line-path" /></svg>
+      <svg class="guide-line-svg" id="guide-line">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 10 3, 0 6" fill="rgba(255,255,255,0.9)" />
+          </marker>
+        </defs>
+        <path id="guide-line-path" marker-end="url(#arrowhead)" />
+      </svg>
       <div class="desk" aria-label="桌面"></div>
       
       <!-- 力度指示器 -->

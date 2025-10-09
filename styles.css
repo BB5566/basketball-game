@@ -7,18 +7,23 @@ body {
   overflow: hidden;
   user-select: none;
   cursor: default;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 /* ========== 容器樣式 ========== */
 .container {
   width: calc(1080px/2);
   height: calc(1920px/2);
+  max-height: 95vh;
+  max-width: 95vw;
   background-image: url('frame.png');
   background-size: cover;
   background-position: center;
   background-color: #8ac4ff;
   position: relative;
-  margin: 0 auto;
   border: 3px solid #333;
   border-radius: 20px;
   overflow: hidden;
@@ -33,75 +38,106 @@ body {
 /* ========== 遊戲界面 ========== */
 .game-header {
   position: absolute;
-  width: 80%;
-  top: 10px;
+  width: 85%;
+  top: 15px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
-  background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,240,240,0.9));
-  padding: 15px 25px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(245,245,255,0.95));
+  padding: 20px 30px;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.8);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(102, 126, 234, 0.2);
 }
 
 .score {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
+  gap: 15px;
   margin: 0;
   color: #333;
 }
 
 .score h3 {
-  margin: 0 15px;
-  font-size: 18px;
-  font-weight: bold;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #4a5568;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 70px;
+}
+
+.score h3 span {
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .timer {
   background: linear-gradient(135deg, #ff6b6b, #ee5a52);
   color: white;
-  padding: 8px 18px;
-  border-radius: 25px;
-  font-weight: bold;
-  margin: 0 10px;
-  box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 18px;
+  box-shadow: 0 6px 20px rgba(255,107,107,0.5), inset 0 -2px 0 rgba(0,0,0,0.1);
   animation: pulse 2s infinite;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timer::before {
+  content: '⏱️';
+  font-size: 20px;
 }
 
 .title {
   position: absolute;
-  width: 80%;
+  width: 85%;
   bottom: 100px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,240,240,0.9));
-  padding: 20px 35px;
-  border-radius: 25px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(252,248,255,0.95));
+  padding: 25px 40px;
+  border-radius: 30px;
+  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3), 0 0 0 1px rgba(255,255,255,0.8);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(118, 75, 162, 0.2);
   text-align: center;
-  transition: transform 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .title:hover {
-  transform: translateX(-50%) translateY(-5px);
+  transform: translateX(-50%) translateY(-8px);
+  box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4), 0 0 0 1px rgba(255,255,255,0.9);
 }
 
 .title h1 {
-  color: #333;
-  margin: 0 0 10px 0;
-  font-size: 24px;
-  font-weight: bold;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 12px 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .title p {
-  color: #666;
+  color: #5a5a5a;
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 500;
 }
 
 /* ========== 遊戲元素 ========== */
@@ -207,44 +243,43 @@ body {
   z-index: 10; /* 桌面在中間層 */
 }
 
-.arrow-indicator {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background-image: url('https://img.icons8.com/ios-filled/100/ffffff/long-arrow-up.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  z-index: 12; /* 在球下方 */
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
-  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.7));
-}
 
 /* ========== 力度指示器 ========== */
 .power-indicator {
   position: absolute;
-  bottom: 50px;
+  bottom: 60px;
   left: 50%;
   transform: translateX(-50%);
-  width: 250px;
-  height: 25px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-  border-radius: 15px;
-  border: 2px solid rgba(255,255,255,0.4);
+  width: 280px;
+  height: 32px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(245,245,255,0.9));
+  border-radius: 20px;
+  border: 3px solid rgba(102, 126, 234, 0.3);
   display: none;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  backdrop-filter: blur(5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.5);
+  backdrop-filter: blur(10px);
+  padding: 3px;
+}
+
+.power-indicator::before {
+  content: '💪 力度';
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  font-weight: 700;
+  color: #667eea;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .power-bar {
   height: 100%;
-  background: linear-gradient(90deg, #4CAF50, #8BC34A, #FFC107, #FF9800, #FF5722);
-  border-radius: 12px;
+  background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 25%, #FFC107 50%, #FF9800 75%, #FF5722 100%);
+  border-radius: 16px;
   width: 0%;
   transition: width 0.1s ease-out;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.4);
   position: relative;
   overflow: hidden;
 }
@@ -256,21 +291,22 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  animation: powerShine 1.5s infinite;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: powerShine 1.2s infinite;
 }
 
 /* ========== 特效元素 ========== */
 .score-popup {
   position: absolute;
-  font-size: 28px;
-  font-weight: bold;
+  font-size: 32px;
+  font-weight: 900;
   color: #4CAF50;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 0 10px rgba(76, 175, 80, 0.8), 2px 2px 4px rgba(0,0,0,0.6);
   pointer-events: none;
   z-index: 100;
   animation: scorePopup 1.2s ease-out forwards;
   font-family: 'Arial Black', sans-serif;
+  filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.5));
 }
 
 .ball-trail {
@@ -286,13 +322,18 @@ body {
 
 .combo-text {
   position: absolute;
-  font-size: 20px;
-  font-weight: bold;
-  color: #FF6B35;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+  font-size: 24px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #FF6B35, #FFD700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 10px rgba(255, 107, 53, 0.8);
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.7)) drop-shadow(0 0 8px rgba(255,215,0,0.6));
   pointer-events: none;
   z-index: 101;
   animation: comboFloat 1s ease-out forwards;
+  font-family: 'Arial Black', sans-serif;
 }
 
 .screen-flash {
@@ -327,43 +368,60 @@ body {
 }
 
 .modal-content {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(252,248,255,0.95));
+  padding: 40px;
+  border-radius: 30px;
   text-align: center;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 2px rgba(102, 126, 234, 0.3);
+  max-width: 450px;
   width: 90%;
+  border: 3px solid rgba(255,255,255,0.8);
+  backdrop-filter: blur(10px);
 }
 
 .modal-content h2 {
-  color: #333;
-  margin-bottom: 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 25px;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.modal-content p {
+  font-size: 16px;
+  color: #4a5568;
+  margin: 12px 0;
+  font-weight: 500;
 }
 
 .restart-btn {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   border: none;
-  padding: 15px 35px;
-  border-radius: 30px;
+  padding: 16px 40px;
+  border-radius: 50px;
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 800;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5), inset 0 -2px 0 rgba(0,0,0,0.2);
   position: relative;
   overflow: hidden;
+  margin-top: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .restart-btn:hover {
-  background: linear-gradient(135deg, #45a049, #3d8b40);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6);
+  background: linear-gradient(135deg, #764ba2, #667eea);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.7), inset 0 -2px 0 rgba(0,0,0,0.2);
 }
 
 .restart-btn:active {
-  transform: translateY(0);
+  transform: translateY(-1px) scale(1.02);
 }
 
 .restart-btn::before {
@@ -393,17 +451,39 @@ body {
 }
 
 .guide-line-svg path {
-  stroke: rgba(255,255,255,0.8);
-  stroke-width: 4;
+  stroke: rgba(255,255,255,0.95);
+  stroke-width: 5;
   fill: none;
-  stroke-dasharray: 5 5;
+  stroke-dasharray: 12 8;
+  filter: drop-shadow(0 0 6px rgba(102, 126, 234, 0.8)) drop-shadow(0 0 12px rgba(255,255,255,0.6));
+  animation: dashAnimation 0.6s linear infinite;
+  stroke-linecap: round;
+}
+
+.guide-line-svg marker polygon {
+  fill: rgba(255,255,255,0.95);
+  filter: drop-shadow(0 0 5px rgba(102, 126, 234,0.9)) drop-shadow(0 0 8px rgba(255,255,255,0.7));
+}
+
+@keyframes dashAnimation {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 14; }
 }
 
 /* ========== 動畫效果 ========== */
 @keyframes pulse {
-  0% { box-shadow: 0 4px 15px rgba(255,107,107,0.4); }
-  50% { box-shadow: 0 4px 20px rgba(255,107,107,0.7); }
-  100% { box-shadow: 0 4px 15px rgba(255,107,107,0.4); }
+  0% {
+    box-shadow: 0 6px 20px rgba(255,107,107,0.5), inset 0 -2px 0 rgba(0,0,0,0.1);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 8px 30px rgba(255,107,107,0.8), inset 0 -2px 0 rgba(0,0,0,0.1);
+    transform: scale(1.02);
+  }
+  100% {
+    box-shadow: 0 6px 20px rgba(255,107,107,0.5), inset 0 -2px 0 rgba(0,0,0,0.1);
+    transform: scale(1);
+  }
 }
 
 @keyframes powerShine {
@@ -485,20 +565,279 @@ body {
 }
 
 @keyframes levelUpFloat {
-  0% { 
-    opacity: 0; 
-    transform: translate(-50%, -50%) scale(0.5); 
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
   }
-  25% { 
-    opacity: 1; 
-    transform: translate(-50%, -50%) scale(1.2); 
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
   }
-  75% { 
-    opacity: 1; 
-    transform: translate(-50%, -50%) scale(1); 
+  75% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
   }
-  100% { 
-    opacity: 0; 
-    transform: translate(-50%, -50%) scale(0.8); 
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+}
+
+/* ========== 筆電螢幕優化 ========== */
+@media (max-height: 900px) {
+  .container {
+    max-height: 92vh;
+  }
+
+  .game-header {
+    padding: 8px 15px;
+  }
+
+  .score h3 {
+    font-size: 16px;
+  }
+
+  .title {
+    bottom: 60px;
+    padding: 15px 25px;
+  }
+
+  .power-indicator {
+    bottom: 35px;
+  }
+}
+
+@media (max-height: 768px) {
+  .container {
+    max-height: 90vh;
+  }
+
+  .ball {
+    width: 70px;
+    height: 70px;
+  }
+
+  .baseket,
+  .basket-in {
+    width: 160px;
+    height: 160px;
+  }
+
+  .title {
+    bottom: 50px;
+    padding: 12px 20px;
+  }
+
+  .title h1 {
+    font-size: 20px;
+  }
+
+  .title p {
+    font-size: 14px;
+  }
+}
+
+/* ========== 手機響應式優化 ========== */
+@media (max-width: 768px) {
+  body {
+    align-items: flex-start;
+  }
+
+  .container {
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    max-width: 100vw;
+    border-radius: 0;
+    border: none;
+  }
+
+  .game-header {
+    width: 90%;
+    padding: 10px 15px;
+  }
+
+  .score {
+    flex-wrap: wrap;
+    font-size: 14px;
+  }
+
+  .score h3 {
+    margin: 5px 8px;
+    font-size: 14px;
+  }
+
+  .timer {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .pause-btn {
+    padding: 6px 12px;
+    font-size: 16px;
+  }
+
+  .title {
+    width: 85%;
+    padding: 15px 20px;
+    bottom: 80px;
+  }
+
+  .title h1 {
+    font-size: 20px;
+  }
+
+  .title p {
+    font-size: 14px;
+  }
+
+  .ball {
+    width: 70px;
+    height: 70px;
+  }
+
+  .baseket,
+  .basket-in {
+    width: 160px;
+    height: 160px;
+  }
+
+  .baseket.level-1,
+  .basket-in.level-1 {
+    width: 200px;
+    height: 200px;
+  }
+
+  .power-indicator {
+    width: 200px;
+    height: 20px;
+    bottom: 40px;
+  }
+
+  .modal-content {
+    padding: 20px;
+    width: 85%;
+  }
+
+  .modal-content h2 {
+    font-size: 22px;
+  }
+
+  .restart-btn,
+  .continue-btn {
+    padding: 12px 25px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .score h3 {
+    margin: 3px 5px;
+    font-size: 12px;
+  }
+
+  .timer {
+    padding: 5px 10px;
+    font-size: 12px;
+    margin: 3px 5px;
+  }
+
+  .pause-btn {
+    padding: 5px 10px;
+    font-size: 14px;
+    margin-left: 5px;
+  }
+}
+
+/* 觸控優化 */
+@media (hover: none) and (pointer: coarse) {
+  .ball {
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .ball:active {
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+
+  .pause-btn,
+  .restart-btn,
+  .continue-btn {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* 增大觸控區域 */
+  .pause-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* ========== 成就系統 ========== */
+.achievement-notification {
+  position: fixed;
+  top: -150px;
+  right: 20px;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  padding: 15px 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 2000;
+  transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border: 2px solid #FFF;
+}
+
+.achievement-notification.show {
+  top: 20px;
+}
+
+.achievement-icon {
+  font-size: 36px;
+  animation: achievementBounce 0.6s ease-in-out infinite alternate;
+}
+
+.achievement-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.achievement-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 3px;
+}
+
+.achievement-desc {
+  font-size: 14px;
+  color: #555;
+}
+
+@keyframes achievementBounce {
+  0% { transform: scale(1) rotate(-5deg); }
+  100% { transform: scale(1.2) rotate(5deg); }
+}
+
+@media (max-width: 768px) {
+  .achievement-notification {
+    right: 10px;
+    padding: 12px 15px;
+    max-width: calc(100vw - 40px);
+  }
+
+  .achievement-icon {
+    font-size: 30px;
+  }
+
+  .achievement-title {
+    font-size: 16px;
+  }
+
+  .achievement-desc {
+    font-size: 12px;
   }
 }

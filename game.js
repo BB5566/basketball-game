@@ -16,6 +16,75 @@ class GameState {
     this.consecutiveHits = 0;
     this.lastHitTime = 0;
     this.basketMoving = false;
+    this.achievements = this.loadAchievements();
+    this.stats = {
+      totalShots: 0,
+      successfulShots: 0,
+      maxCombo: 0,
+      maxScore: 0
+    };
+  }
+
+  loadAchievements() {
+    const saved = localStorage.getItem("achievements");
+    return saved ? JSON.parse(saved) : {
+      firstScore: false,
+      combo5: false,
+      combo10: false,
+      level2: false,
+      level3: false,
+      score50: false,
+      score100: false,
+      perfectShooter: false
+    };
+  }
+
+  saveAchievements() {
+    localStorage.setItem("achievements", JSON.stringify(this.achievements));
+  }
+
+  checkAchievement(type, value) {
+    const achievements = {
+      firstScore: { condition: () => this.stats.successfulShots === 1, title: "🎯 首次得分", desc: "完成第一次投籃得分" },
+      combo5: { condition: () => value >= 5, title: "🔥 連擊高手", desc: "達成5連擊" },
+      combo10: { condition: () => value >= 10, title: "⚡ 連擊大師", desc: "達成10連擊" },
+      level2: { condition: () => this.currentLevel >= 2, title: "🏆 晉級達人", desc: "達到第2關" },
+      level3: { condition: () => this.currentLevel >= 3, title: "👑 終極挑戰者", desc: "達到第3關" },
+      score50: { condition: () => this.score >= 50, title: "💯 得分高手", desc: "累積50分" },
+      score100: { condition: () => this.score >= 100, title: "🌟 得分大師", desc: "累積100分" },
+      perfectShooter: { condition: () => this.stats.successfulShots >= 10 && (this.stats.successfulShots / this.stats.totalShots) >= 0.8, title: "🎖️ 神射手", desc: "命中率達80%（至少10次投籃）" }
+    };
+
+    if (achievements[type] && !this.achievements[type] && achievements[type].condition()) {
+      this.achievements[type] = true;
+      this.saveAchievements();
+      this.showAchievementNotification(achievements[type].title, achievements[type].desc);
+      return true;
+    }
+    return false;
+  }
+
+  showAchievementNotification(title, desc) {
+    const notification = $(`
+      <div class="achievement-notification">
+        <div class="achievement-icon">🏅</div>
+        <div class="achievement-text">
+          <div class="achievement-title">${title}</div>
+          <div class="achievement-desc">${desc}</div>
+        </div>
+      </div>
+    `);
+
+    $("body").append(notification);
+
+    setTimeout(() => {
+      notification.addClass("show");
+    }, 100);
+
+    setTimeout(() => {
+      notification.removeClass("show");
+      setTimeout(() => notification.remove(), 500);
+    }, 3500);
   }
 
   reset() {
@@ -182,7 +251,7 @@ class EffectSystem {
   static showLevelUpMessage(level) {
     const messages = {
       2: "🎯 LEVEL 2 - 籃框開始移動！",
-      3: "🔥 LEVEL 3 - 挑戰極限！",
+      3: "🔥 LEVEL 3 - 移動加速！",
     };
 
     const message = messages[level] || "LEVEL UP!";
@@ -296,21 +365,34 @@ class BasketballGame {
     this.startPos = { x: 0, y: 0 };
     this.powerLevel = 0;
 
-    // 初始化背景音樂
-    this.bgMusic = new Audio('sound.mp3');
-    this.bgMusic.preload = 'auto';
-    this.bgMusic.loop = true;
-    this.bgMusic.volume = 0.5;
+    // 初始化音效系統
+    this.sounds = {
+      shoot: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'),
+      score: new Audio('https://assets.mixkit.co/active_storage/sfx/1434/1434-preview.mp3'),
+      miss: new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3'),
+      levelUp: new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3')
+    };
+
+    // 設置音量
+    Object.values(this.sounds).forEach(sound => {
+      sound.volume = 0.3;
+      sound.preload = 'auto';
+    });
 
     this.init();
+  }
+
+  playSound(soundName) {
+    if (this.sounds[soundName]) {
+      this.sounds[soundName].currentTime = 0;
+      this.sounds[soundName].play().catch(e => console.log('Audio play failed:', e));
+    }
   }
 
   init() {
     this.updateUI();
     this.setupEventListeners();
     this.startGameTimer();
-    // 開始播放背景音樂
-    this.bgMusic.play();
     // 隱藏拋物線預覽
     $('#guide-line').hide();
   }
@@ -382,6 +464,13 @@ class BasketballGame {
         this.state.basketMoving = true;
         this.basketController.startMovement(this.state.currentLevel);
       }
+
+      // 播放升級音效
+      this.playSound('levelUp');
+
+      // 檢查關卡成就
+      this.state.checkAchievement('level2');
+      this.state.checkAchievement('level3');
     }
   }
 
@@ -421,8 +510,13 @@ class BasketballGame {
         : 1;
     this.state.lastHitTime = currentTime;
 
+    // 更新統計數據
+    this.state.stats.successfulShots++;
+    this.state.stats.maxCombo = Math.max(this.state.stats.maxCombo, this.state.consecutiveHits);
+
     const points = this.calculateScore();
     this.state.score += points;
+    this.state.stats.maxScore = Math.max(this.state.stats.maxScore, this.state.score);
     $("#score").text(this.state.score);
 
     EffectSystem.showScorePopup(points, basketCenterX, basketCenterY);
@@ -437,6 +531,18 @@ class BasketballGame {
     this.resetBallPosition();
 
     this.basketController.shake(this.state.basketMoving);
+
+    // 播放得分音效
+    this.playSound('score');
+
+    // 檢查成就
+    this.state.checkAchievement('firstScore');
+    this.state.checkAchievement('combo5', this.state.consecutiveHits);
+    this.state.checkAchievement('combo10', this.state.consecutiveHits);
+    this.state.checkAchievement('score50');
+    this.state.checkAchievement('score100');
+    this.state.checkAchievement('perfectShooter');
+
     this.checkLevelUp();
 
   }
@@ -508,6 +614,9 @@ class BasketballGame {
   shootBall(targetX, targetY, power) {
     if (!this.state.gameActive) return;
 
+    // 記錄投籃次數
+    this.state.stats.totalShots++;
+
     const ball = $("#ball");
     const ballRect = ball[0].getBoundingClientRect();
     const containerRect = $(".container")[0].getBoundingClientRect();
@@ -553,6 +662,9 @@ class BasketballGame {
       power,
       distance
     );
+
+    // 播放投籃音效
+    this.playSound('shoot');
 
     ball.css({
       transition: `all ${trajectory.flightTime}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
@@ -605,6 +717,9 @@ class BasketballGame {
 
   handleMissedShot() {
     this.state.consecutiveHits = 0;
+
+    // 播放失誤音效
+    this.playSound('miss');
 
     const ball = $("#ball");
     const containerRect = $(".container")[0].getBoundingClientRect();
@@ -689,51 +804,40 @@ class BasketballGame {
   // ========== 事件處理 (簡化版) ==========
   handleBallStart(e) {
     if (!this.state.gameActive) return;
-    
+
     e.preventDefault();
     this.isDragging = true;
-    
+
     const clientX = e.type === 'touchstart' ? e.originalEvent.touches[0].clientX : e.clientX;
     const clientY = e.type === 'touchstart' ? e.originalEvent.touches[0].clientY : e.clientY;
-    
+
     this.startPos = { x: clientX, y: clientY };
     $('#ball').addClass('dragging');
-    
-    // 直接顯示力度條和箭頭
+
+    // 顯示力度條
     this.powerLevel = 0;
     $('#power-bar').css('width', '0%');
     $('#power-indicator').show();
-    $('#arrow-indicator').css({
-      left: ($('#ball').position().left - 50 + 40) + 'px', // 校準箭頭中心
-      top: ($('#ball').position().top - 50 + 40) + 'px',
-      opacity: 0.7,
-      transform: 'rotate(0deg) scale(1)'
-    });
+
     // 顯示拋物線預覽
     $('#guide-line').show();
   }
 
   handleBallMove(e) {
     if (!this.isDragging || !this.state.gameActive) return;
-    
+
     e.preventDefault();
     const clientX = e.type === 'touchmove' ? e.originalEvent.touches[0].clientX : e.clientX;
     const clientY = e.type === 'touchmove' ? e.originalEvent.touches[0].clientY : e.clientY;
-    
+
     const deltaX = clientX - this.startPos.x;
     const deltaY = clientY - this.startPos.y;
-    
+
     // 力度完全由拖拽距離決定
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     this.powerLevel = Math.min(100, distance / 2); // 除以2來調整靈敏度
     $('#power-bar').css('width', this.powerLevel + '%');
 
-    // 更新箭頭方向和大小
-    const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI + 90;
-    $('#arrow-indicator').css({
-      transform: `rotate(${angle}deg) scale(${1 + this.powerLevel / 200})`,
-      opacity: 0.7 + (this.powerLevel / 100) * 0.3
-    });
     // 計算並更新拋物線路徑預覽
     const ballRect = $('#ball')[0].getBoundingClientRect();
     const containerRect = $('.container')[0].getBoundingClientRect();
@@ -743,20 +847,27 @@ class BasketballGame {
     let targetY = this.startPos.y - containerRect.top - deltaY * 2;
     targetX = Math.max(50, Math.min(targetX, containerRect.width - 50));
     targetY = Math.max(50, Math.min(targetY, containerRect.height - 200));
+
+    // 繪製曲線路徑（貝塞爾曲線模擬拋物線）
     const dist = Math.hypot(targetX - startX, targetY - startY);
     const traj = this.physics.calculateTrajectory(startX, startY, targetX, targetY, this.powerLevel, dist);
-    const pathD = `M${startX},${startY} L${targetX},${targetY}`;
+
+    // 計算控制點（拋物線頂點）
+    const controlX = startX + (targetX - startX) * 0.5;
+    const controlY = Math.min(startY, targetY) - traj.peakHeight;
+
+    // 使用二次貝塞爾曲線
+    const pathD = `M${startX},${startY} Q${controlX},${controlY} ${targetX},${targetY}`;
     $('#guide-line-path').attr('d', pathD);
   }
 
   handleBallEnd(e) {
     if (!this.isDragging || !this.state.gameActive) return;
-    
+
     e.preventDefault();
     this.isDragging = false;
-    
+
     $('#power-indicator').hide();
-    $('#arrow-indicator').css('opacity', 0); // 隱藏箭頭
     $('#ball').removeClass('dragging');
     // 隱藏並清除拋物線預覽
     $('#guide-line').hide();
