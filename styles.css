@@ -207,7 +207,7 @@ body {
 .basket-in {
   width: 180px;
   height: 180px;
-  background-image: url('BASKET-IN.png');
+  background-image: url('basket-in.png');
   background-size: cover;
   background-position: center;
   position: absolute;
