@@ -98,8 +98,8 @@ class GameState {
 
   showAchievementNotification(title, desc) {
     const notification = $(`
-      <div class="achievement-notification">
-        <div class="achievement-icon">🏅</div>
+      <div class="achievement-notification" role="status" aria-live="polite">
+        <div class="achievement-icon" aria-hidden="true">🏅</div>
         <div class="achievement-text">
           <div class="achievement-title">${title}</div>
           <div class="achievement-desc">${desc}</div>
@@ -406,57 +406,74 @@ class TutorialSystem {
     this.shown = localStorage.getItem('tutorialShown') === 'true';
   }
 
-  show() {
-    if (this.shown) return;
+  show(onClose) {
+    if (this.shown) {
+      if (typeof onClose === "function") onClose();
+      return;
+    }
 
     const tutorial = $(`
-      <div class="tutorial-overlay">
+      <div class="tutorial-overlay" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
         <div class="tutorial-content">
-          <button class="tutorial-close-icon" aria-label="關閉">&times;</button>
-          <h2>遊戲教學</h2>
+          <button class="tutorial-close-icon" type="button" aria-label="關閉教學">&times;</button>
+          <h2 id="tutorial-title">遊戲教學</h2>
           <div class="tutorial-steps">
             <div class="tutorial-step">
-              <span class="step-icon">👆</span>
+              <span class="step-icon" aria-hidden="true">👆</span>
               <p><strong>拖拽投球</strong><br>按住籃球向下拖拽</p>
             </div>
             <div class="tutorial-step">
-              <span class="step-icon">🎯</span>
+              <span class="step-icon" aria-hidden="true">🎯</span>
               <p><strong>瞄準籃框</strong><br>拖拽方向相反處即為投球方向</p>
             </div>
             <div class="tutorial-step">
-              <span class="step-icon">💪</span>
+              <span class="step-icon" aria-hidden="true">💪</span>
               <p><strong>控制力度</strong><br>拖拽越遠，投球力度越大</p>
             </div>
             <div class="tutorial-step">
-              <span class="step-icon">🔥</span>
+              <span class="step-icon" aria-hidden="true">🔥</span>
               <p><strong>連擊獎勵</strong><br>連續命中可獲得額外分數</p>
             </div>
           </div>
-          <button class="tutorial-close-btn">開始遊戲</button>
-          <label class="tutorial-checkbox">
+          <button class="tutorial-close-btn" type="button">開始遊戲</button>
+          <label class="tutorial-checkbox" for="dont-show-again">
             <input type="checkbox" id="dont-show-again"> 不再顯示
           </label>
         </div>
       </div>
     `);
 
-    $('body').append(tutorial);
+    $("body").append(tutorial);
 
-    setTimeout(() => tutorial.addClass('show'), 100);
+    setTimeout(() => {
+      tutorial.addClass("show");
+      tutorial.find(".tutorial-close-btn").focus();
+    }, 100);
 
     const closeModal = (e) => {
-      if (e.target !== e.currentTarget && $(e.currentTarget).hasClass('tutorial-overlay')) return;
-      if ($('#dont-show-again').is(':checked')) {
-        localStorage.setItem('tutorialShown', 'true');
+      if (e && e.target !== e.currentTarget && $(e.currentTarget).hasClass("tutorial-overlay")) return;
+      if ($("#dont-show-again").is(":checked")) {
+        localStorage.setItem("tutorialShown", "true");
         this.shown = true;
       }
-      tutorial.removeClass('show');
-      setTimeout(() => tutorial.remove(), 300);
+      $(document).off("keydown.tutorial");
+      tutorial.removeClass("show");
+      setTimeout(() => {
+        tutorial.remove();
+        if (typeof onClose === "function") onClose();
+        $("#ball").focus();
+      }, 300);
     };
 
-    tutorial.find('.tutorial-close-btn').on('click', closeModal);
-    tutorial.find('.tutorial-close-icon').on('click', closeModal);
-    tutorial.on('click', function(e) {
+    $(document).on("keydown.tutorial", (e) => {
+      if (e.key === "Escape") {
+        closeModal();
+      }
+    });
+
+    tutorial.find(".tutorial-close-btn").on("click", closeModal);
+    tutorial.find(".tutorial-close-icon").on("click", closeModal);
+    tutorial.on("click", function (e) {
       if (e.target === this) {
         closeModal(e);
       }
@@ -528,11 +545,16 @@ class BasketballGame {
   init() {
     this.updateUI();
     this.setupEventListeners();
-    this.startGameTimer();
     $('#guide-line').hide();
 
-    // 顯示教學
-    setTimeout(() => this.tutorial.show(), 500);
+    // 若尚未看過教學則先顯示教學，關閉後才開始計時；若已看過則直接開始計時
+    if (this.tutorial.shown) {
+      this.startGameTimer();
+    } else {
+      this.tutorial.show(() => {
+        this.startGameTimer();
+      });
+    }
   }
 
   updateUI() {
@@ -617,16 +639,21 @@ class BasketballGame {
 
     $("#final-score").text(this.state.score);
     $("#final-top-score").text(this.state.topScore);
-    $("#game-over-modal").css("display", "flex");
+    const $modal = $("#game-over-modal");
+    $modal.attr("aria-hidden", "false").css("display", "flex");
+    setTimeout(() => {
+      $modal.find(".restart-btn").focus();
+    }, 100);
   }
 
   restart() {
     this.state.reset();
     this.basketController.stopMovement();
     this.resetBallPosition();
-    $("#game-over-modal").hide();
+    $("#game-over-modal").attr("aria-hidden", "true").hide();
     this.updateUI();
     this.startGameTimer();
+    $("#ball").focus();
   }
 
   checkLevelUp() {
@@ -952,7 +979,7 @@ class BasketballGame {
     // 顯示力度條
     this.powerLevel = 0;
     $('#power-bar').css('width', '0%');
-    $('#power-indicator').show();
+    $('#power-indicator').attr('aria-valuenow', 0).show();
 
     // 顯示拋物線預覽
     $('#guide-line').show();
@@ -972,6 +999,7 @@ class BasketballGame {
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     this.powerLevel = Math.min(100, distance / 2); // 除以2來調整靈敏度
     $('#power-bar').css('width', this.powerLevel + '%');
+    $('#power-indicator').attr('aria-valuenow', Math.round(this.powerLevel));
 
     // 計算並更新拋物線路徑預覽
     const ballRect = $('#ball')[0].getBoundingClientRect();
@@ -1002,7 +1030,7 @@ class BasketballGame {
     e.preventDefault();
     this.isDragging = false;
 
-    $('#power-indicator').hide();
+    $('#power-indicator').hide().attr('aria-valuenow', 0);
     $('#ball').removeClass('dragging');
     // 隱藏並清除拋物線預覽
     $('#guide-line').hide();
