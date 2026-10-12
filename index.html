@@ -31,23 +31,36 @@
 
   <body>
     <!-- 遊戲主容器 -->
-    <div class="container">
+    <main class="container" role="main" aria-label="投籃機遊戲畫面">
       <!-- 遊戲頭部信息 -->
       <header class="game-header">
-        <div class="score">
-          <h3>關卡: <span id="level">1</span></h3>
-          <h3>分數: <span id="score">0</span></h3>
-          <div class="timer">時間: <span id="timer">120</span>s</div>
-          <h3>最高分: <span id="top-score">0</span></h3>
+        <h1 class="visually-hidden">投籃機遊戲 - Basketball Game</h1>
+        <div class="score" role="region" aria-label="遊戲狀態數據">
+          <h3 class="score-badge score-level">
+            <span class="badge-label">關卡:</span>
+            <span class="badge-value" id="level">1</span>
+          </h3>
+          <h3 class="score-badge score-points">
+            <span class="badge-label">分數:</span>
+            <span class="badge-value" id="score">0</span>
+          </h3>
+          <div class="score-badge timer">
+            <span class="badge-label">時間:</span>
+            <span class="badge-value"><span id="timer">150</span>s</span>
+          </div>
+          <h3 class="score-badge score-top">
+            <span class="badge-label">最高分:</span>
+            <span class="badge-value" id="top-score">0</span>
+          </h3>
         </div>
       </header>
 
       <!-- 遊戲元素 -->
-      <div class="baseket" aria-label="籃框"></div>
-      <div class="basket-in" id="basket-in" aria-label="進籃效果"></div>
-      <div class="basket-area" id="basket-area"></div>
-      <div class="ball" id="ball" aria-label="籃球" tabindex="0"></div>
-      <svg class="guide-line-svg" id="guide-line">
+      <div class="baseket" role="img" aria-label="籃框"></div>
+      <div class="basket-in" id="basket-in" aria-hidden="true"></div>
+      <div class="basket-area" id="basket-area" aria-hidden="true"></div>
+      <div class="ball" id="ball" role="button" aria-label="籃球，按住拖拽投籃" tabindex="0"></div>
+      <svg class="guide-line-svg" id="guide-line" aria-hidden="true">
         <defs>
           <marker
             id="arrowhead"
@@ -62,51 +75,48 @@
         </defs>
         <path id="guide-line-path" marker-end="url(#arrowhead)" />
       </svg>
-      <div class="desk" aria-label="桌面"></div>
+      <div class="desk" aria-hidden="true"></div>
 
       <!-- 力度指示器 -->
-      <div class="power-indicator" id="power-indicator" aria-label="投球力度">
+      <div class="power-indicator" id="power-indicator" role="progressbar" aria-label="投球力度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <div class="power-bar" id="power-bar"></div>
       </div>
 
       <!-- 遊戲說明 -->
-      <div class="title">
+      <footer class="title" role="contentinfo" aria-label="遊戲操作提示">
         <p>
           拖拽投籃得分！第一關有大籃框幫助練習！<br />
           <small>💡 瞄準籃框頂部投球效果最佳</small>
         </p>
-      </div>
-    </div>
+      </footer>
+    </main>
 
     <!-- 遊戲結束模態框 -->
     <div
       class="game-over-modal"
       id="game-over-modal"
       role="dialog"
+      aria-modal="true"
       aria-labelledby="game-over-title"
+      aria-hidden="true"
     >
       <div class="modal-content">
         <h2 id="game-over-title">🎉 遊戲結束！</h2>
-        <p>
-          <strong>您的分數:</strong>
-          <span
-            id="final-score"
-            style="color: #4caf50; font-size: 24px; font-weight: bold"
-            >0</span
-          >
-        </p>
-        <p>
-          <strong>最高分數:</strong>
-          <span
-            id="final-top-score"
-            style="color: #ff6b35; font-size: 20px; font-weight: bold"
-            >0</span
-          >
-        </p>
-        <p style="color: #666; font-size: 14px; margin-top: 15px">
+        <div class="modal-scores">
+          <p class="score-row">
+            <strong class="stat-label">您的分數:</strong>
+            <span id="final-score" class="stat-score-final">0</span>
+          </p>
+          <p class="score-row">
+            <strong class="stat-label">最高分數:</strong>
+            <span id="final-top-score" class="stat-score-top">0</span>
+          </p>
+        </div>
+        <p class="game-over-tip">
           💡 技巧：瞄準籃框頂部，連續命中可獲得額外獎勵！
         </p>
         <button
+          type="button"
           class="restart-btn"
           onclick="restartGame()"
           aria-label="重新開始遊戲"
