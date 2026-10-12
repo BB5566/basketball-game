@@ -21,6 +21,10 @@
     <!-- 載入自定義樣式 -->
     <link rel="stylesheet" href="styles.css" />
 
+    <!-- 預載入 LCP 相關圖片 -->
+    <link rel="preload" as="image" href="frame.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="basket.png" fetchpriority="high" />
+
     <!-- 避免 favicon 404 -->
     <link rel="icon" href="data:," />
   </head>
@@ -118,6 +122,7 @@
       integrity="sha512-Tc0i+vRogmX4NN7tuLbQfBxa8JkfUSAxSFVzmU31nVdHyiHElPPy2cWfFacmCJKw0VqovrzKhdd2TSTMdAxp2g=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
+      defer
     ></script>
 
     <!-- 載入 jQuery -->
@@ -126,9 +131,10 @@
       integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
+      defer
     ></script>
 
     <!-- 載入遊戲邏輯 -->
-    <script src="game.js"></script>
+    <script src="game.js" defer></script>
   </body>
 </html>
