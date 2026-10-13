@@ -963,7 +963,7 @@ body {
 
 .tutorial-steps {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   margin-bottom: 30px;
 }
@@ -998,8 +998,8 @@ body {
 .tutorial-step strong {
   display: block;
   margin-bottom: 5px;
-  color: #667eea;
-  font-size: 14px;
+  color: #4b3275;
+  font-size: 15px;
 }
 
 .tutorial-close-btn {
@@ -1038,12 +1038,19 @@ body {
   min-width: 44px;
   padding: 8px;
   margin: 0 auto;
+  transition: all 0.2s ease;
+}
+
+.tutorial-checkbox:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
 }
 
 .tutorial-checkbox input[type="checkbox"] {
   cursor: pointer;
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
+  accent-color: #667eea;
 }
 
 @media (max-width: 768px) {
