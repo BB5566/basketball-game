@@ -927,11 +927,11 @@ body {
   position: absolute;
   top: 15px;
   right: 15px;
-  background: none;
+  background: rgba(0, 0, 0, 0.08);
   border: none;
   font-size: 28px;
   line-height: 1;
-  color: #6b7280;
+  color: #111827;
   cursor: pointer;
   width: 44px;
   height: 44px;
@@ -990,15 +990,15 @@ body {
 
 .tutorial-step p {
   margin: 0;
-  font-size: 13px;
-  color: #4a5568;
+  font-size: 14px;
+  color: #111827;
   line-height: 1.5;
 }
 
 .tutorial-step strong {
   display: block;
   margin-bottom: 5px;
-  color: #4b3275;
+  color: #111827;
   font-size: 15px;
 }
 
@@ -1077,12 +1077,13 @@ body {
   }
 
   .tutorial-step p {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .tutorial-close-btn {
     padding: 12px 40px;
     font-size: 16px;
+    width: 100%;
   }
 }
 
