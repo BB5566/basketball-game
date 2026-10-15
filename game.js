@@ -417,15 +417,15 @@ class TutorialSystem {
           <div class="tutorial-steps">
             <div class="tutorial-step">
               <span class="step-icon">👆</span>
-              <p><strong>拖拽投球</strong><br>按住籃球向下拖拽</p>
+              <p><strong>拖曳投球</strong><br>按住籃球向下拖曳</p>
             </div>
             <div class="tutorial-step">
               <span class="step-icon">🎯</span>
-              <p><strong>瞄準籃框</strong><br>拖拽方向相反處即為投球方向</p>
+              <p><strong>瞄準籃框</strong><br>拖曳方向相反處即為投球方向</p>
             </div>
             <div class="tutorial-step">
               <span class="step-icon">💪</span>
-              <p><strong>控制力度</strong><br>拖拽越遠，投球力度越大</p>
+              <p><strong>控制力度</strong><br>拖曳越遠，投球力度越大</p>
             </div>
             <div class="tutorial-step">
               <span class="step-icon">🔥</span>
@@ -968,7 +968,7 @@ class BasketballGame {
     const deltaX = clientX - this.startPos.x;
     const deltaY = clientY - this.startPos.y;
 
-    // 力度完全由拖拽距離決定
+    // 力度完全由拖曳距離決定
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     this.powerLevel = Math.min(100, distance / 2); // 除以2來調整靈敏度
     $('#power-bar').css('width', this.powerLevel + '%');

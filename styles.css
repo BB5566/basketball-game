@@ -1031,12 +1031,13 @@ body {
   justify-content: center;
   gap: 8px;
   font-size: 14px;
-  color: #6b7280;
+  color: #374151;
+  font-weight: 600;
   cursor: pointer;
   user-select: none;
   min-height: 44px;
   min-width: 44px;
-  padding: 8px;
+  padding: 10px 20px;
   margin: 0 auto;
   transition: all 0.2s ease;
 }
@@ -1051,6 +1052,8 @@ body {
   width: 24px;
   height: 24px;
   accent-color: #667eea;
+  border: 2px solid #4b5563;
+  border-radius: 4px;
 }
 
 @media (max-width: 768px) {
@@ -1064,7 +1067,7 @@ body {
   }
 
   .tutorial-steps {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 15px;
   }
 
