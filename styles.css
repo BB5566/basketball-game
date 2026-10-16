@@ -1029,7 +1029,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 12px;
   font-size: 14px;
   color: #374151;
   font-weight: 600;
@@ -1037,7 +1037,7 @@ body {
   user-select: none;
   min-height: 44px;
   min-width: 44px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   margin: 0 auto;
   transition: all 0.2s ease;
 }
@@ -1049,8 +1049,8 @@ body {
 
 .tutorial-checkbox input[type="checkbox"] {
   cursor: pointer;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   accent-color: #667eea;
   border: 2px solid #4b5563;
   border-radius: 4px;
@@ -1059,6 +1059,8 @@ body {
 @media (max-width: 768px) {
   .tutorial-content {
     padding: 30px 20px;
+    max-height: 85vh;
+    overflow-y: auto;
   }
 
   .tutorial-content h2 {
@@ -1073,10 +1075,16 @@ body {
 
   .tutorial-step {
     padding: 15px 10px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 10px;
   }
 
   .tutorial-step .step-icon {
     font-size: 32px;
+    margin-bottom: 0;
+    margin-right: 10px;
   }
 
   .tutorial-step p {
