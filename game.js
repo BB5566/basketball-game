@@ -432,10 +432,10 @@ class TutorialSystem {
               <p><strong>連擊獎勵</strong><br>連續命中可獲得額外分數</p>
             </div>
           </div>
-          <button class="tutorial-close-btn">開始遊戲</button>
           <label class="tutorial-checkbox">
             <input type="checkbox" id="dont-show-again"> 不再顯示
           </label>
+          <button class="tutorial-close-btn">開始遊戲</button>
         </div>
       </div>
     `);
