@@ -1013,7 +1013,8 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-  margin-bottom: 15px;
+  margin-bottom: 0;
+  margin-top: 15px;
 }
 
 .tutorial-close-btn:hover {
@@ -1038,7 +1039,7 @@ body {
   min-height: 44px;
   min-width: 44px;
   padding: 12px 24px;
-  margin: 0 auto;
+  margin: 0 auto 15px auto;
   transition: all 0.2s ease;
 }
 
@@ -1059,7 +1060,7 @@ body {
 @media (max-width: 768px) {
   .tutorial-content {
     padding: 30px 20px;
-    max-height: 85vh;
+    max-height: 95vh;
     overflow-y: auto;
   }
 
@@ -1069,22 +1070,22 @@ body {
   }
 
   .tutorial-steps {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
 
   .tutorial-step {
     padding: 15px 10px;
     display: flex;
-    align-items: center;
-    text-align: left;
+    flex-direction: column;
+    text-align: center;
     gap: 10px;
   }
 
   .tutorial-step .step-icon {
     font-size: 32px;
-    margin-bottom: 0;
-    margin-right: 10px;
+    margin-bottom: 5px;
+    margin-right: 0;
   }
 
   .tutorial-step p {
