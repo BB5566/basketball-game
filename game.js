@@ -417,19 +417,19 @@ class TutorialSystem {
           <div class="tutorial-steps">
             <div class="tutorial-step">
               <span class="step-icon">👆</span>
-              <p><strong>拖曳投球</strong><br>按住籃球向下拖曳</p>
+              <div><p><strong>拖曳投球</strong><br>按住籃球向下拖曳</p></div>
             </div>
             <div class="tutorial-step">
               <span class="step-icon">🎯</span>
-              <p><strong>瞄準籃框</strong><br>拖曳方向相反處即為投球方向</p>
+              <div><p><strong>瞄準籃框</strong><br>拖曳方向相反處即為投球方向</p></div>
             </div>
             <div class="tutorial-step">
               <span class="step-icon">💪</span>
-              <p><strong>控制力度</strong><br>拖曳越遠，投球力度越大</p>
+              <div><p><strong>控制力度</strong><br>拖曳越遠，投球力度越大</p></div>
             </div>
             <div class="tutorial-step">
               <span class="step-icon">🔥</span>
-              <p><strong>連擊獎勵</strong><br>連續命中可獲得額外分數</p>
+              <div><p><strong>連擊獎勵</strong><br>連續命中可獲得額外分數</p></div>
             </div>
           </div>
           <label class="tutorial-checkbox">
