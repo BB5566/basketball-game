@@ -1015,6 +1015,7 @@ body {
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
   margin-bottom: 0;
   margin-top: 15px;
+  min-width: 240px;
 }
 
 .tutorial-close-btn:hover {
@@ -1070,7 +1071,7 @@ body {
   }
 
   .tutorial-steps {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 15px;
   }
 
