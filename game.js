@@ -416,24 +416,24 @@ class TutorialSystem {
           <h2>遊戲教學</h2>
           <div class="tutorial-steps">
             <div class="tutorial-step">
-              <span class="step-icon">👆</span>
+              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><line x1="12" y1="12" x2="12" y2="20"></line><polyline points="9 17 12 20 15 17"></polyline></svg></span>
               <p><strong>拖曳投球</strong><br>按住籃球向下拖曳</p>
             </div>
             <div class="tutorial-step">
-              <span class="step-icon">🎯</span>
+              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#764ba2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></span>
               <p><strong>瞄準籃框</strong><br>拖曳方向相反處即為投球方向</p>
             </div>
             <div class="tutorial-step">
-              <span class="step-icon">💪</span>
+              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="20" x2="4" y2="16"></line><line x1="10" y1="20" x2="10" y2="12"></line><line x1="16" y1="20" x2="16" y2="8"></line><line x1="22" y1="20" x2="22" y2="4"></line></svg></span>
               <p><strong>控制力度</strong><br>拖曳越遠，投球力度越大</p>
             </div>
             <div class="tutorial-step">
-              <span class="step-icon">🔥</span>
+              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg></span>
               <p><strong>連擊獎勵</strong><br>連續命中可獲得額外分數</p>
             </div>
           </div>
-          <label class="tutorial-checkbox">
-            <input type="checkbox" id="dont-show-again"> 不再顯示
+          <label class="tutorial-checkbox" for="dont-show-again">
+            <input type="checkbox" id="dont-show-again"> <span>不再顯示</span>
           </label>
           <button class="tutorial-close-btn">開始遊戲</button>
         </div>
