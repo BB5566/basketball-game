@@ -416,7 +416,7 @@ class TutorialSystem {
           <h2>遊戲教學</h2>
           <div class="tutorial-steps">
             <div class="tutorial-step">
-              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><line x1="12" y1="12" x2="12" y2="20"></line><polyline points="9 17 12 20 15 17"></polyline></svg></span>
+              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 13V5a3 3 0 0 1 6 0v4"/><path d="M15 9h1a3 3 0 0 1 3 3v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9a3 3 0 0 1 3-3h1"/><line x1="12" y1="13" x2="12" y2="20"/><polyline points="9 17 12 20 15 17"/></svg></span>
               <p><strong>拖曳投球</strong><br>按住籃球向下拖曳</p>
             </div>
             <div class="tutorial-step">
