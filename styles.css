@@ -1042,14 +1042,10 @@ body {
   padding: 12px 24px;
   margin: 0 auto 15px auto;
   transition: all 0.2s ease;
-  background: rgba(102, 126, 234, 0.1);
-  border-radius: 8px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
 }
 
 .tutorial-checkbox:hover {
-  background: rgba(102, 126, 234, 0.2);
-  border-color: rgba(102, 126, 234, 0.4);
+  opacity: 0.8;
 }
 
 .tutorial-checkbox input[type="checkbox"] {
@@ -1074,7 +1070,7 @@ body {
   }
 
   .tutorial-steps {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 15px;
   }
 
