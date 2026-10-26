@@ -1042,6 +1042,10 @@ body {
   padding: 12px 24px;
   margin: 0 auto 15px auto;
   transition: all 0.2s ease;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 250px;
 }
 
 .tutorial-checkbox:hover {
@@ -1070,8 +1074,8 @@ body {
   }
 
   .tutorial-steps {
-    grid-template-columns: 1fr;
-    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
   .tutorial-step {
@@ -1089,7 +1093,7 @@ body {
   }
 
   .tutorial-step p {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .tutorial-close-btn {
