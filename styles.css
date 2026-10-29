@@ -1037,13 +1037,8 @@ body {
   font-weight: 600;
   cursor: pointer;
   user-select: none;
-  min-height: 44px;
-  min-width: 44px;
-  padding: 12px 24px;
   margin: 0 auto 15px auto;
   transition: all 0.2s ease;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
   width: 100%;
   max-width: 250px;
 }
@@ -1074,26 +1069,27 @@ body {
   }
 
   .tutorial-steps {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 10px;
   }
 
   .tutorial-step {
-    padding: 10px 5px;
+    padding: 10px 15px;
     display: flex;
-    flex-direction: column;
-    text-align: center;
-    gap: 5px;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 15px;
   }
 
   .tutorial-step .step-icon {
-    font-size: 24px;
-    margin-bottom: 5px;
+    font-size: 28px;
+    margin-bottom: 0;
     margin-right: 0;
   }
 
   .tutorial-step p {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .tutorial-close-btn {
