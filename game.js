@@ -416,19 +416,19 @@ class TutorialSystem {
           <h2>遊戲教學</h2>
           <div class="tutorial-steps">
             <div class="tutorial-step">
-              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><line x1="12" y1="8" x2="12" y2="16" /><polyline points="9 13 12 16 15 13" /><path d="M8 12c0-2.5 1.5-4 4-4s4 1.5 4 4" /></svg></span>
+              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v5"/><path d="M9 11V9a2 2 0 0 0-2-2v0a2 2 0 0 0-2-2v7.51a2 2 0 0 0 .59 1.41l3.5 3.5a2 2 0 0 0 1.41.59H16a2 2 0 0 0 2-2v-5.26a2 2 0 0 0-.59-1.41l-3.5-3.5"/></svg></span>
               <p><strong>拖曳投球</strong><br>按住籃球向下拖曳</p>
             </div>
             <div class="tutorial-step">
-              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#764ba2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/><path stroke-dasharray="4,4" d="M12 16c0 3-2 6-5 8"/></svg></span>
+              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#764ba2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
               <p><strong>瞄準籃框</strong><br>拖曳方向相反處即為投球方向</p>
             </div>
             <div class="tutorial-step">
-              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/><path stroke-dasharray="2,2" d="M12 13v9"/></svg></span>
+              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.34 16.99a10 10 0 1 1 17.32 0"/></svg></span>
               <p><strong>控制力度</strong><br>拖曳越遠投球力度越大</p>
             </div>
             <div class="tutorial-step">
-              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-2 9H6L4 10z"/><ellipse cx="12" cy="10" rx="8" ry="3"/><path d="M12 2s-2 3-2 5M12 2s2 3 2 5M12 2v5" stroke="#FF6B35"/><circle cx="12" cy="2" r="1" fill="#FF6B35" stroke="none"/></svg></span>
+              <span class="step-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>
               <p><strong>連擊獎勵</strong><br>連續命中可獲得額外分數</p>
             </div>
           </div>
