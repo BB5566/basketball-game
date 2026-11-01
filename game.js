@@ -837,7 +837,6 @@ class BasketballGame {
     this.boundaryCheckInterval = requestAnimationFrame(checkBoundary);
 
     this.activeTimers.push(setTimeout(() => {
-      if (ball.css("opacity") === "0") return;
       ball.css("transform", `translate(0, 0) rotate(${power * 6}deg) scale(1)`);
       const ballRect = ball[0].getBoundingClientRect();
       EffectSystem.createBallTrail(
@@ -857,7 +856,6 @@ class BasketballGame {
 
   checkShotResult(ball, containerRect) {
     if (!this.state.gameActive) return;
-    if (ball.css("opacity") === "0") return;
 
     const ballRect = ball[0].getBoundingClientRect();
     const ballCenterX = ballRect.left - containerRect.left + ballRect.width / 2;
@@ -938,6 +936,9 @@ class BasketballGame {
   }
 
   handleBallOutOfBounds() {
+    this.activeTimers.forEach(timer => clearTimeout(timer));
+    this.activeTimers = [];
+
     $("#ball")
       .stop(true, true)
       .css({
