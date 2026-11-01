@@ -536,7 +536,7 @@ class BasketballGame {
       shoot: 'sounds/shoot.mp3',
       score: 'sounds/score.mp3',
       miss: 'sounds/miss.mp3',
-      levelUp: 'sounds/levelUp.mp3'
+      levelUp: 'sounds/levelup.mp3'
     };
 
     Object.entries(soundUrls).forEach(([name, url]) => {
