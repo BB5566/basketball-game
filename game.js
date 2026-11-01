@@ -4,6 +4,34 @@
  * 優化：效能優化、資源管理、教學系統、錯誤處理
  */
 
+// ========== 儲存空間工具 ==========
+const safeStorage = {
+  memoryFallback: {},
+  getItem(key) {
+    try {
+      return localStorage.getItem(key) ?? this.memoryFallback[key] ?? null;
+    } catch (e) {
+      return this.memoryFallback[key] ?? null;
+    }
+  },
+  setItem(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      // Fallback if localStorage fails
+    }
+    this.memoryFallback[key] = value;
+  },
+  removeItem(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      // Fallback if localStorage fails
+    }
+    delete this.memoryFallback[key];
+  }
+};
+
 // ========== 遊戲配置常數 ==========
 const GAME_CONFIG = {
   INITIAL_TIME: 150,
@@ -40,7 +68,7 @@ const GAME_CONFIG = {
 class GameState {
   constructor() {
     this.score = 0;
-    this.topScore = localStorage.getItem("topScore") || 0;
+    this.topScore = Number(safeStorage.getItem("topScore")) || 0;
     this.timeLeft = GAME_CONFIG.INITIAL_TIME;
     this.gameActive = false;
     this.gameTimer = null;
@@ -58,8 +86,8 @@ class GameState {
   }
 
   loadAchievements() {
-    const saved = localStorage.getItem("achievements");
-    return saved ? JSON.parse(saved) : {
+    const saved = safeStorage.getItem("achievements");
+    const defaultAchievements = {
       firstScore: false,
       combo5: false,
       combo10: false,
@@ -69,10 +97,22 @@ class GameState {
       score100: false,
       perfectShooter: false
     };
+
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          return parsed;
+        }
+      } catch (e) {
+        // 發生錯誤或格式不對時，退回預設值
+      }
+    }
+    return defaultAchievements;
   }
 
   saveAchievements() {
-    localStorage.setItem("achievements", JSON.stringify(this.achievements));
+    safeStorage.setItem("achievements", JSON.stringify(this.achievements));
   }
 
   checkAchievement(type, value) {
@@ -137,7 +177,7 @@ class GameState {
   updateTopScore() {
     if (this.score > this.topScore) {
       this.topScore = this.score;
-      localStorage.setItem("topScore", this.topScore);
+      safeStorage.setItem("topScore", this.topScore);
       return true;
     }
     return false;
@@ -407,7 +447,7 @@ class BasketController {
 // ========== 教學系統 ==========
 class TutorialSystem {
   constructor() {
-    this.shown = localStorage.getItem('tutorialShown') === 'true';
+    this.shown = safeStorage.getItem('tutorialShown') === 'true';
   }
 
   show() {
@@ -451,7 +491,7 @@ class TutorialSystem {
     const closeModal = (e) => {
       if (e.target !== e.currentTarget && $(e.currentTarget).hasClass('tutorial-overlay')) return;
       if ($('#dont-show-again').is(':checked')) {
-        localStorage.setItem('tutorialShown', 'true');
+        safeStorage.setItem('tutorialShown', 'true');
         this.shown = true;
       }
       tutorial.removeClass('show');
@@ -468,7 +508,7 @@ class TutorialSystem {
   }
 
   reset() {
-    localStorage.removeItem('tutorialShown');
+    safeStorage.removeItem('tutorialShown');
     this.shown = false;
   }
 }
