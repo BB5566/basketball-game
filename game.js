@@ -480,6 +480,8 @@ class BasketballGame {
     this.startPos = { x: 0, y: 0 };
     this.powerLevel = 0;
     this.boundaryCheckInterval = null;
+    this.isShooting = false;
+    this.activeTimers = [];
 
     // 初始化音效系統
     this.sounds = {};
@@ -532,7 +534,7 @@ class BasketballGame {
     $('#guide-line').hide();
 
     // 顯示教學
-    setTimeout(() => this.tutorial.show(), 500);
+    this.activeTimers.push(setTimeout(() => this.tutorial.show(), 500));
   }
 
   updateUI() {
@@ -581,8 +583,12 @@ class BasketballGame {
       clearInterval(this.state.gameTimer);
     }
     if (this.boundaryCheckInterval) {
-      clearInterval(this.boundaryCheckInterval);
+      cancelAnimationFrame(this.boundaryCheckInterval);
+      this.boundaryCheckInterval = null;
     }
+
+    this.activeTimers.forEach(timer => clearTimeout(timer));
+    this.activeTimers = [];
 
     // 清理籃框動畫
     this.basketController.cleanup();
@@ -611,6 +617,13 @@ class BasketballGame {
   endGame() {
     this.state.gameActive = false;
     if (this.state.gameTimer) clearInterval(this.state.gameTimer);
+    if (this.boundaryCheckInterval) {
+      cancelAnimationFrame(this.boundaryCheckInterval);
+      this.boundaryCheckInterval = null;
+    }
+    this.activeTimers.forEach(timer => clearTimeout(timer));
+    this.activeTimers = [];
+
     this.basketController.stopMovement();
 
     this.state.updateTopScore();
@@ -621,6 +634,13 @@ class BasketballGame {
   }
 
   restart() {
+    if (this.boundaryCheckInterval) {
+      cancelAnimationFrame(this.boundaryCheckInterval);
+      this.boundaryCheckInterval = null;
+    }
+    this.activeTimers.forEach(timer => clearTimeout(timer));
+    this.activeTimers = [];
+
     this.state.reset();
     this.basketController.stopMovement();
     this.resetBallPosition();
@@ -666,6 +686,8 @@ class BasketballGame {
   }
 
   handleBasketHit(ballX, ballY) {
+    if (!this.state.gameActive) return;
+
     const basket = $(".baseket");
     const basketIn = $("#basket-in");
     const ball = $("#ball");
@@ -732,16 +754,18 @@ class BasketballGame {
     this.checkLevelUp();
 
     // 0.5秒後自動恢復球的位置，或點擊球立即恢復
-    setTimeout(() => {
+    this.activeTimers.push(setTimeout(() => {
       basketIn.removeClass("show");
       this.resetBallPosition();
-    }, 500);
+    }, 500));
 
   }
 
 
   shootBall(targetX, targetY, power) {
     if (!this.state.gameActive) return;
+
+    this.isShooting = true;
 
     // 記錄投籃次數
     this.state.stats.totalShots++;
@@ -812,7 +836,7 @@ class BasketballGame {
     };
     this.boundaryCheckInterval = requestAnimationFrame(checkBoundary);
 
-    setTimeout(() => {
+    this.activeTimers.push(setTimeout(() => {
       if (ball.css("opacity") === "0") return;
       ball.css("transform", `translate(0, 0) rotate(${power * 6}deg) scale(1)`);
       const ballRect = ball[0].getBoundingClientRect();
@@ -820,18 +844,19 @@ class BasketballGame {
         ballRect.left - containerRect.left + ballRect.width / 2,
         ballRect.top - containerRect.top + ballRect.height / 2
       );
-    }, trajectory.flightTime * 0.3);
+    }, trajectory.flightTime * 0.3));
 
-    setTimeout(() => {
+    this.activeTimers.push(setTimeout(() => {
       if (this.boundaryCheckInterval) {
         cancelAnimationFrame(this.boundaryCheckInterval);
         this.boundaryCheckInterval = null;
       }
       this.checkShotResult(ball, containerRect);
-    }, trajectory.flightTime);
+    }, trajectory.flightTime));
   }
 
   checkShotResult(ball, containerRect) {
+    if (!this.state.gameActive) return;
     if (ball.css("opacity") === "0") return;
 
     const ballRect = ball[0].getBoundingClientRect();
@@ -868,7 +893,7 @@ class BasketballGame {
       opacity: "0.8",
     });
 
-    setTimeout(() => this.resetBallPosition(), 1000);
+    this.activeTimers.push(setTimeout(() => this.resetBallPosition(), 1000));
   }
 
   handleDirectDrop(targetX, targetY) {
@@ -896,7 +921,7 @@ class BasketballGame {
       opacity: "0.7",
     });
 
-    setTimeout(() => this.resetBallPosition(), 1200);
+    this.activeTimers.push(setTimeout(() => this.resetBallPosition(), 1200));
   }
 
   isBallOutOfBounds(ball, containerRect) {
@@ -922,10 +947,11 @@ class BasketballGame {
       })
       .removeClass("shooting");
 
-    setTimeout(() => this.resetBallPosition(), 200);
+    this.activeTimers.push(setTimeout(() => this.resetBallPosition(), 200));
   }
 
   resetBallPosition() {
+    this.isShooting = false;
     $("#ball").removeClass("shooting").css({
       top: this.physics.ballOriginalPos.y,
       left: this.physics.ballOriginalPos.x,
@@ -938,7 +964,7 @@ class BasketballGame {
 
   // ========== 事件處理 (簡化版) ==========
   handleBallStart(e) {
-    if (!this.state.gameActive) return;
+    if (!this.state.gameActive || this.isShooting) return;
 
     e.preventDefault();
     this.isDragging = true;
