@@ -315,7 +315,11 @@ class BasketController {
   }
 
   startMovement(level) {
-    if (this.animationFrame) return;
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame);
+      this.animationFrame = null;
+      this.lastTimestamp = 0;
+    }
 
     const basket = $(".baseket");
     const basketIn = $("#basket-in");
