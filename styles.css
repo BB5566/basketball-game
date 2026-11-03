@@ -1051,43 +1051,43 @@ body {
 
 .tutorial-checkbox input[type="checkbox"] {
   cursor: pointer;
-  width: 28px;
-  height: 28px;
+  width: 18px;
+  height: 18px;
   accent-color: #667eea;
-  border: 2px solid #4b5563;
+  border: 2px solid #111827;
   border-radius: 4px;
 }
 
 @media (max-width: 768px) {
   .tutorial-content {
-    padding: 30px 20px;
+    padding: 24px 20px 32px 20px;
     max-height: 95vh;
     overflow-y: auto;
   }
 
   .tutorial-content h2 {
     font-size: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
 
   .tutorial-steps {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 10px;
   }
 
   .tutorial-step {
     padding: 10px 15px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    text-align: center;
+    text-align: left;
     gap: 5px;
   }
 
   .tutorial-step .step-icon {
     font-size: 28px;
     margin-bottom: 0;
-    margin-right: 0;
+    margin-right: 12px;
   }
 
   .tutorial-step p {
