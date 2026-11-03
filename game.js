@@ -533,10 +533,10 @@ class BasketballGame {
 
   initSounds() {
     const soundUrls = {
-      shoot: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3',
-      score: 'https://assets.mixkit.co/active_storage/sfx/1434/1434-preview.mp3',
-      miss: 'https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3',
-      levelUp: 'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3'
+      shoot: 'sounds/shoot.mp3',
+      score: 'sounds/score.mp3',
+      miss: 'sounds/miss.mp3',
+      levelUp: 'sounds/levelUp.mp3'
     };
 
     Object.entries(soundUrls).forEach(([name, url]) => {
