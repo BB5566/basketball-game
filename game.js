@@ -476,6 +476,7 @@ class TutorialSystem {
             <input type="checkbox" id="dont-show-again"> <span>不再顯示</span>
           </label>
           <button class="tutorial-close-btn">開始遊戲</button>
+          <button class="tutorial-later-btn">稍後再說</button>
         </div>
       </div>
     `);
@@ -484,20 +485,25 @@ class TutorialSystem {
 
     setTimeout(() => tutorial.addClass('show'), 100);
 
-    const closeModal = (e) => {
-      if (e.target !== e.currentTarget && $(e.currentTarget).hasClass('tutorial-overlay')) return;
+    const closeModal = () => {
       if ($('#dont-show-again').is(':checked')) {
         safeStorage.setItem('tutorialShown', 'true');
         this.shown = true;
       }
+      $(document).off('keydown.tutorial');
       tutorial.removeClass('show');
       setTimeout(() => tutorial.remove(), 300);
     };
 
-    tutorial.find('.tutorial-close-btn').on('click', closeModal);
+    tutorial.find('.tutorial-close-btn, .tutorial-later-btn').on('click', closeModal);
     tutorial.on('click', function(e) {
       if (e.target === this) {
-        closeModal(e);
+        closeModal();
+      }
+    });
+    $(document).on('keydown.tutorial', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
       }
     });
   }

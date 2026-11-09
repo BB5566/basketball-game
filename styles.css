@@ -1003,6 +1003,24 @@ body {
   transform: translateY(-1px) scale(1.02);
 }
 
+.tutorial-later-btn {
+  display: block;
+  margin: 12px auto 0;
+  padding: 12px 16px;
+  min-height: 44px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tutorial-later-btn:hover {
+  color: #374151;
+}
+
 .tutorial-checkbox {
   display: flex;
   align-items: center;
@@ -1075,7 +1093,7 @@ body {
 
   .tutorial-checkbox {
     min-height: 48px;
-    max-width: none;
+    max-width: none; /* 僅手機版：整行可點 */
     padding: 10px 12px;
     margin-bottom: 10px;
     touch-action: manipulation;
