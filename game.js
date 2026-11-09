@@ -476,7 +476,6 @@ class TutorialSystem {
             <input type="checkbox" id="dont-show-again"> <span>不再顯示</span>
           </label>
           <button class="tutorial-close-btn">開始遊戲</button>
-          <button class="tutorial-later-btn">稍後再說</button>
         </div>
       </div>
     `);
@@ -495,12 +494,13 @@ class TutorialSystem {
       setTimeout(() => tutorial.remove(), 300);
     };
 
-    tutorial.find('.tutorial-close-btn, .tutorial-later-btn').on('click', closeModal);
+    tutorial.find('.tutorial-close-btn').on('click', closeModal);
     tutorial.on('click', function(e) {
       if (e.target === this) {
         closeModal();
       }
     });
+    $(document).off('keydown.tutorial');
     $(document).on('keydown.tutorial', function(e) {
       if (e.key === 'Escape') {
         closeModal();
