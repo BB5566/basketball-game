@@ -453,7 +453,6 @@ class TutorialSystem {
     const tutorial = $(`
       <div class="tutorial-overlay">
         <div class="tutorial-content">
-          <button class="tutorial-close-icon" aria-label="關閉">&times;</button>
           <h2>遊戲教學</h2>
           <div class="tutorial-steps">
             <div class="tutorial-step">
@@ -485,21 +484,26 @@ class TutorialSystem {
 
     setTimeout(() => tutorial.addClass('show'), 100);
 
-    const closeModal = (e) => {
-      if (e.target !== e.currentTarget && $(e.currentTarget).hasClass('tutorial-overlay')) return;
+    const closeModal = () => {
       if ($('#dont-show-again').is(':checked')) {
         safeStorage.setItem('tutorialShown', 'true');
         this.shown = true;
       }
+      $(document).off('keydown.tutorial');
       tutorial.removeClass('show');
       setTimeout(() => tutorial.remove(), 300);
     };
 
     tutorial.find('.tutorial-close-btn').on('click', closeModal);
-    tutorial.find('.tutorial-close-icon').on('click', closeModal);
     tutorial.on('click', function(e) {
       if (e.target === this) {
-        closeModal(e);
+        closeModal();
+      }
+    });
+    $(document).off('keydown.tutorial');
+    $(document).on('keydown.tutorial', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
       }
     });
   }
