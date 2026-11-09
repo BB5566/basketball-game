@@ -453,7 +453,6 @@ class TutorialSystem {
     const tutorial = $(`
       <div class="tutorial-overlay">
         <div class="tutorial-content">
-          <button class="tutorial-close-icon" aria-label="關閉">&times;</button>
           <h2>遊戲教學</h2>
           <div class="tutorial-steps">
             <div class="tutorial-step">
@@ -496,7 +495,6 @@ class TutorialSystem {
     };
 
     tutorial.find('.tutorial-close-btn').on('click', closeModal);
-    tutorial.find('.tutorial-close-icon').on('click', closeModal);
     tutorial.on('click', function(e) {
       if (e.target === this) {
         closeModal(e);
