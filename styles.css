@@ -1048,29 +1048,31 @@ body {
   }
 
   .tutorial-steps {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 8px;
     margin-bottom: 16px;
   }
 
   .tutorial-step {
-    padding: 8px;
+    padding: 8px 10px;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     text-align: left;
-    gap: 6px;
+    gap: 10px;
   }
 
   .tutorial-step .step-icon {
     font-size: 24px;
+    line-height: 1;
     margin-bottom: 0;
-    margin-right: 4px;
     flex-shrink: 0;
   }
 
   .tutorial-step p {
+    flex: 1;
     font-size: 13px;
+    text-align: left;
   }
 
   .tutorial-checkbox {
@@ -1086,7 +1088,29 @@ body {
     height: 24px;
   }
 
-  .tutorial-close-btn {
+.tutorial-close-x {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #6b7280;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tutorial-close-x:hover {
+  background: rgba(102, 126, 234, 0.15);
+  color: #111827;
+}
+
+.tutorial-close-btn {
     padding: 12px 40px;
     font-size: 16px;
     width: 100%;
