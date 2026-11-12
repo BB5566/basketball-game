@@ -9,21 +9,18 @@
       content="互動式投籃機遊戲，三個關卡挑戰，支援觸控操作"
     />
 
-    <!-- 載入 Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/css/bootstrap.min.css"
-      integrity="sha512-fw7f+TcMjTb7bpbLJZlP8g2Y4XcCyFZW8uy8HsRZsH/SwbMw0plKHFHr99DN3l04VsYNwvzicUX/6qurvIxbxw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+    <!-- 預先建立 CDN 連線，加速 jQuery 載入 -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
 
     <!-- 載入自定義樣式 -->
     <link rel="stylesheet" href="styles.css" />
 
-    <!-- 預載入 LCP 相關圖片 -->
+    <!-- 預載入 LCP 主視覺 -->
     <link rel="preload" as="image" href="frame.png" fetchpriority="high" />
-    <link rel="preload" as="image" href="basket.png" fetchpriority="high" />
+
+    <!-- 首屏可見的籃框與球，提前到 CSS 載入前開始抓取（優先權低於主視覺） -->
+    <link rel="preload" as="image" href="basket.png" fetchpriority="low" />
+    <link rel="preload" as="image" href="ball.png" fetchpriority="low" />
 
     <!-- 避免 favicon 404 -->
     <link rel="icon" href="data:," />
@@ -127,15 +124,6 @@
         </button>
       </div>
     </div>
-
-    <!-- 載入 Bootstrap JS -->
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/js/bootstrap.bundle.min.js"
-      integrity="sha512-Tc0i+vRogmX4NN7tuLbQfBxa8JkfUSAxSFVzmU31nVdHyiHElPPy2cWfFacmCJKw0VqovrzKhdd2TSTMdAxp2g=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-      defer
-    ></script>
 
     <!-- 載入 jQuery -->
     <script

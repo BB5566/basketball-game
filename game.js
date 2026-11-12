@@ -529,6 +529,7 @@ class BasketballGame {
     this.boundaryCheckInterval = null;
     this.isShooting = false;
     this.activeTimers = [];
+    this.basketInImage = null;
 
     // 初始化音效系統
     this.sounds = {};
@@ -538,32 +539,48 @@ class BasketballGame {
   }
 
   initSounds() {
-    const soundUrls = {
+    // 只記錄音效網址，第一次播放時才建立 Audio 物件，
+    // 避免頁面載入就抓取音效檔，拖慢手機版載入效能
+    this.soundUrls = {
       shoot: 'sounds/shoot.mp3',
       score: 'sounds/score.mp3',
       miss: 'sounds/miss.mp3',
       levelUp: 'sounds/levelUp.mp3'
     };
+    this.sounds = {};
+  }
 
-    Object.entries(soundUrls).forEach(([name, url]) => {
+  getSound(soundName) {
+    if (!(soundName in this.sounds)) {
+      const url = this.soundUrls[soundName];
+      if (!url) {
+        this.sounds[soundName] = null;
+        return null;
+      }
       try {
         const audio = new Audio(url);
         audio.volume = GAME_CONFIG.SOUND_VOLUME;
-        audio.preload = 'auto';
         audio.addEventListener('error', () => {
-          console.warn(`Failed to load sound: ${name}`);
-          this.sounds[name] = null;
+          console.warn(`Failed to load sound: ${soundName}`);
+          this.sounds[soundName] = null;
         });
-        this.sounds[name] = audio;
+        this.sounds[soundName] = audio;
       } catch (e) {
-        console.warn(`Error initializing sound: ${name}`, e);
-        this.sounds[name] = null;
+        console.warn(`Error initializing sound: ${soundName}`, e);
+        this.sounds[soundName] = null;
       }
-    });
+    }
+    return this.sounds[soundName];
+  }
+
+  preloadBasketIn() {
+    if (this.basketInImage) return;
+    this.basketInImage = new Image();
+    this.basketInImage.src = 'basket-in.png';
   }
 
   playSound(soundName) {
-    const sound = this.sounds[soundName];
+    const sound = this.getSound(soundName);
     if (sound) {
       try {
         sound.currentTime = 0;
@@ -582,6 +599,9 @@ class BasketballGame {
 
     // 顯示教學
     this.activeTimers.push(setTimeout(() => this.tutorial.show(), 500));
+
+    // 進籃圖延後到頁面載入後才抓取，避免與主視覺搶頻寬
+    window.addEventListener('load', () => this.preloadBasketIn(), { once: true });
   }
 
   updateUI() {
@@ -1016,6 +1036,7 @@ class BasketballGame {
 
     e.preventDefault();
     this.isDragging = true;
+    this.preloadBasketIn();
 
     const clientX = e.type === 'touchstart' ? e.originalEvent.touches[0].clientX : e.clientX;
     const clientY = e.type === 'touchstart' ? e.originalEvent.touches[0].clientY : e.clientY;
