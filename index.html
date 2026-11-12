@@ -31,7 +31,7 @@
 
   <body>
     <!-- 遊戲主容器 -->
-    <div class="container">
+    <main class="container">
       <!-- 遊戲頭部信息 -->
       <header class="game-header">
         <div class="score">
@@ -43,11 +43,22 @@
       </header>
 
       <!-- 遊戲元素 -->
-      <div class="baseket" aria-label="籃框"></div>
-      <div class="basket-in" id="basket-in" aria-label="進籃效果"></div>
-      <div class="basket-area" id="basket-area"></div>
-      <div class="ball" id="ball" aria-label="籃球" tabindex="0"></div>
-      <svg class="guide-line-svg" id="guide-line">
+      <div class="baseket" role="img" aria-label="籃框"></div>
+      <div class="basket-in" id="basket-in" aria-hidden="true"></div>
+      <div class="basket-area" id="basket-area" aria-hidden="true"></div>
+      <div
+        class="ball"
+        id="ball"
+        role="button"
+        tabindex="0"
+        aria-label="籃球，按住並拖曳即可投籃"
+      ></div>
+      <svg
+        class="guide-line-svg"
+        id="guide-line"
+        aria-hidden="true"
+        focusable="false"
+      >
         <defs>
           <marker
             id="arrowhead"
@@ -62,10 +73,10 @@
         </defs>
         <path id="guide-line-path" marker-end="url(#arrowhead)" />
       </svg>
-      <div class="desk" aria-label="桌面"></div>
+      <div class="desk" aria-hidden="true"></div>
 
       <!-- 力度指示器 -->
-      <div class="power-indicator" id="power-indicator" aria-label="投球力度">
+      <div class="power-indicator" id="power-indicator" aria-hidden="true">
         <div class="power-bar" id="power-bar"></div>
       </div>
 
@@ -76,13 +87,14 @@
           <small>💡 瞄準籃框頂部投球效果最佳</small>
         </p>
       </div>
-    </div>
+    </main>
 
     <!-- 遊戲結束模態框 -->
     <div
       class="game-over-modal"
       id="game-over-modal"
       role="dialog"
+      aria-modal="true"
       aria-labelledby="game-over-title"
     >
       <div class="modal-content">
@@ -91,7 +103,7 @@
           <strong>您的分數:</strong>
           <span
             id="final-score"
-            style="color: #4caf50; font-size: 24px; font-weight: bold"
+            style="color: #2e7d32; font-size: 24px; font-weight: bold"
             >0</span
           >
         </p>
@@ -99,7 +111,7 @@
           <strong>最高分數:</strong>
           <span
             id="final-top-score"
-            style="color: #ff6b35; font-size: 20px; font-weight: bold"
+            style="color: #c2410c; font-size: 20px; font-weight: bold"
             >0</span
           >
         </p>
