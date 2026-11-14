@@ -925,6 +925,33 @@ body {
   background-clip: text;
 }
 
+.tutorial-close-x {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #6b7280;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tutorial-close-x:hover {
+  background: rgba(102, 126, 234, 0.15);
+  color: #111827;
+}
+
+/* 教學彈窗開啟時隱藏底層提示，避免文字穿透干擾 */
+body.tutorial-open .title {
+  visibility: hidden;
+}
+
 .tutorial-steps {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1076,29 +1103,7 @@ body {
     height: 24px;
   }
 
-.tutorial-close-x {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 44px;
-  height: 44px;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-  color: #6b7280;
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.tutorial-close-x:hover {
-  background: rgba(102, 126, 234, 0.15);
-  color: #111827;
-}
-
-.tutorial-close-btn {
+  .tutorial-close-btn {
     padding: 12px 40px;
     font-size: 16px;
     width: 100%;

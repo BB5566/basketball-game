@@ -445,10 +445,16 @@ class BasketController {
 class TutorialSystem {
   constructor() {
     this.shown = safeStorage.getItem('tutorialShown') === 'true';
+    this.onClose = null;
   }
 
-  show() {
-    if (this.shown) return;
+  show(onClose) {
+    if (this.shown) {
+      if (onClose) onClose();
+      return;
+    }
+
+    this.onClose = onClose || null;
 
     const tutorial = $(`
       <div class="tutorial-overlay" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
@@ -481,18 +487,27 @@ class TutorialSystem {
       </div>
     `);
 
-    $('body').append(tutorial);
+    $('body').addClass('tutorial-open').append(tutorial);
 
     setTimeout(() => tutorial.addClass('show'), 100);
 
+    let closed = false;
     const closeModal = () => {
+      if (closed) return;
+      closed = true;
       if ($('#dont-show-again').is(':checked')) {
         safeStorage.setItem('tutorialShown', 'true');
         this.shown = true;
       }
       $(document).off('keydown.tutorial');
+      $('body').removeClass('tutorial-open');
       tutorial.removeClass('show');
       setTimeout(() => tutorial.remove(), 300);
+      if (this.onClose) {
+        const callback = this.onClose;
+        this.onClose = null;
+        callback();
+      }
     };
 
     tutorial.find('.tutorial-close-btn').on('click', closeModal);
@@ -594,11 +609,16 @@ class BasketballGame {
   init() {
     this.updateUI();
     this.setupEventListeners();
-    this.startGameTimer();
     $('#guide-line').hide();
 
-    // 顯示教學
-    this.activeTimers.push(setTimeout(() => this.tutorial.show(), 500));
+    // 教學關閉後才開始計時，避免玩家閱讀時背景時間倒數
+    if (this.tutorial.shown) {
+      this.startGameTimer();
+    } else {
+      this.activeTimers.push(
+        setTimeout(() => this.tutorial.show(() => this.startGameTimer()), 500)
+      );
+    }
 
     // 進籃圖延後到頁面載入後才抓取，避免與主視覺搶頻寬
     window.addEventListener('load', () => this.preloadBasketIn(), { once: true });
