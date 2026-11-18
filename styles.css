@@ -931,11 +931,15 @@ body {
   right: 12px;
   width: 44px;
   height: 44px;
-  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(102, 126, 234, 0.18);
   border-radius: 50%;
-  background: transparent;
-  color: #6b7280;
+  background: rgba(102, 126, 234, 0.1);
+  color: #4b5563;
   font-size: 22px;
+  font-weight: 700;
   line-height: 1;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -943,8 +947,12 @@ body {
 }
 
 .tutorial-close-x:hover {
-  background: rgba(102, 126, 234, 0.15);
+  background: rgba(102, 126, 234, 0.2);
   color: #111827;
+}
+
+.tutorial-close-x:active {
+  background: rgba(102, 126, 234, 0.3);
 }
 
 /* 教學彈窗開啟時隱藏底層提示與狀態列，避免文字穿透、重疊與對比不足 */
@@ -1023,8 +1031,8 @@ body.tutorial-open .game-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-size: 14px;
+  gap: 10px;
+  font-size: 15px;
   color: #374151;
   font-weight: 600;
   cursor: pointer;
@@ -1032,9 +1040,10 @@ body.tutorial-open .game-header {
   margin: 0 auto 15px auto;
   transition: all 0.2s ease;
   width: 100%;
-  max-width: 250px;
-  min-height: 44px;
-  padding: 8px;
+  min-height: 48px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  touch-action: manipulation;
 }
 
 .tutorial-checkbox:hover {
@@ -1043,8 +1052,8 @@ body.tutorial-open .game-header {
 
 .tutorial-checkbox input[type="checkbox"] {
   cursor: pointer;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
   accent-color: #667eea;
   border: 2px solid #111827;
@@ -1070,20 +1079,20 @@ body.tutorial-open .game-header {
   }
 
   .tutorial-step {
-    padding: 10px 12px;
+    padding: 12px 14px;
     display: flex;
     flex-direction: row;
     align-items: center;
     text-align: left;
-    gap: 12px;
+    gap: 16px;
   }
 
   .tutorial-step .step-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    font-size: 24px;
+    width: 32px;
+    font-size: 26px;
     line-height: 1;
     margin-bottom: 0;
     flex-shrink: 0;
@@ -1091,8 +1100,8 @@ body.tutorial-open .game-header {
 
   .tutorial-step p {
     flex: 1;
-    font-size: 13px;
-    line-height: 1.4;
+    font-size: 14px;
+    line-height: 1.6;
     text-align: left;
   }
 
@@ -1110,8 +1119,8 @@ body.tutorial-open .game-header {
   }
 
   .tutorial-checkbox input[type="checkbox"] {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
   }
 
   .tutorial-close-btn {
