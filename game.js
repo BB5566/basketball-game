@@ -459,7 +459,6 @@ class TutorialSystem {
     const tutorial = $(`
       <div class="tutorial-overlay" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
         <div class="tutorial-content">
-          <button type="button" class="tutorial-close-x" aria-label="關閉教學">✕</button>
           <h2 id="tutorial-title">遊戲教學</h2>
           <div class="tutorial-steps">
             <div class="tutorial-step">
@@ -511,7 +510,6 @@ class TutorialSystem {
     };
 
     tutorial.find('.tutorial-close-btn').on('click', closeModal);
-    tutorial.find('.tutorial-close-x').on('click', closeModal);
     tutorial.on('click', function(e) {
       if (e.target === this) {
         closeModal();

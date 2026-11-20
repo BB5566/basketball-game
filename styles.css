@@ -925,36 +925,6 @@ body {
   background-clip: text;
 }
 
-.tutorial-close-x {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(102, 126, 234, 0.18);
-  border-radius: 50%;
-  background: rgba(102, 126, 234, 0.1);
-  color: #4b5563;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.tutorial-close-x:hover {
-  background: rgba(102, 126, 234, 0.2);
-  color: #111827;
-}
-
-.tutorial-close-x:active {
-  background: rgba(102, 126, 234, 0.3);
-}
-
 /* 教學彈窗開啟時隱藏底層提示與狀態列，避免文字穿透、重疊與對比不足 */
 body.tutorial-open .title,
 body.tutorial-open .game-header {
@@ -965,7 +935,7 @@ body.tutorial-open .game-header {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .tutorial-step {
@@ -1014,7 +984,7 @@ body.tutorial-open .game-header {
   transition: all 0.3s ease;
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
   margin-bottom: 0;
-  margin-top: 15px;
+  margin-top: 10px;
   width: 100%;
 }
 
@@ -1037,7 +1007,7 @@ body.tutorial-open .game-header {
   font-weight: 600;
   cursor: pointer;
   user-select: none;
-  margin: 0 auto 15px auto;
+  margin: 0 auto 10px auto;
   transition: all 0.2s ease;
   width: 100%;
   min-height: 48px;
@@ -1052,8 +1022,8 @@ body.tutorial-open .game-header {
 
 .tutorial-checkbox input[type="checkbox"] {
   cursor: pointer;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   flex-shrink: 0;
   accent-color: #667eea;
   border: 2px solid #111827;
@@ -1128,6 +1098,36 @@ body.tutorial-open .game-header {
     font-size: 16px;
     width: 100%;
     margin-top: 10px;
+  }
+}
+
+/* ========== 桌機版教學彈窗優化 ========== */
+@media (min-width: 1024px) {
+  .tutorial-content {
+    max-width: 960px;
+    padding: 44px 48px;
+  }
+
+  .tutorial-content h2 {
+    margin-bottom: 24px;
+  }
+
+  .tutorial-steps {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .tutorial-step {
+    padding: 24px 16px;
+  }
+
+  .tutorial-checkbox {
+    margin-bottom: 8px;
+  }
+
+  .tutorial-close-btn {
+    margin-top: 8px;
   }
 }
 
