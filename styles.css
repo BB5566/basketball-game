@@ -1073,25 +1073,25 @@ body.tutorial-open .game-header {
   }
 
   .tutorial-steps {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 10px;
     margin-bottom: 16px;
   }
 
   .tutorial-step {
-    padding: 12px 10px;
+    padding: 12px 14px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    text-align: center;
-    gap: 6px;
+    text-align: left;
+    gap: 12px;
   }
 
   .tutorial-step .step-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 28px;
     line-height: 1;
     margin-bottom: 0;
     flex-shrink: 0;
@@ -1100,11 +1100,11 @@ body.tutorial-open .game-header {
   .tutorial-step p {
     font-size: 13px;
     line-height: 1.5;
-    text-align: center;
+    text-align: left;
   }
 
   .tutorial-step strong {
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
 
   /* 標題已是區塊元素，移除多餘換行以縮減卡片高度 */
@@ -1121,8 +1121,8 @@ body.tutorial-open .game-header {
   }
 
   .tutorial-checkbox input[type="checkbox"] {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
 
   .tutorial-close-btn {
@@ -1136,7 +1136,7 @@ body.tutorial-open .game-header {
 /* ========== 桌機版教學彈窗優化 ========== */
 @media (min-width: 1024px) {
   .tutorial-content {
-    max-width: 640px;
+    max-width: 500px;
     padding: 32px 36px;
   }
 
