@@ -901,7 +901,7 @@ body {
   background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
   padding: 40px;
   border-radius: 30px;
-  max-width: 500px;
+  max-width: 480px;
   width: 90%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   border: 3px solid rgba(102, 126, 234, 0.3);
@@ -972,35 +972,6 @@ body.tutorial-open .game-header {
   font-size: 15px;
 }
 
-.tutorial-x-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 50%;
-  background: rgba(59, 63, 143, 0.1);
-  color: #3b3f8f;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.tutorial-x-btn:hover {
-  background: rgba(59, 63, 143, 0.2);
-  transform: scale(1.05);
-}
-
-.tutorial-x-btn:active {
-  transform: scale(0.95);
-}
-
 .tutorial-close-btn {
   background: linear-gradient(135deg, #3b3f8f, #4a2a6b);
   color: white;
@@ -1051,12 +1022,12 @@ body.tutorial-open .game-header {
 
 .tutorial-checkbox input[type="checkbox"] {
   cursor: pointer;
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   margin: 0;
   flex-shrink: 0;
   accent-color: #667eea;
-  border: 2px solid #111827;
+  border: 2px solid #4b5563;
   border-radius: 4px;
 }
 
@@ -1121,8 +1092,8 @@ body.tutorial-open .game-header {
   }
 
   .tutorial-checkbox input[type="checkbox"] {
-    width: 32px;
-    height: 32px;
+    width: 20px;
+    height: 20px;
   }
 
   .tutorial-close-btn {
@@ -1136,7 +1107,7 @@ body.tutorial-open .game-header {
 /* ========== 桌機版教學彈窗優化 ========== */
 @media (min-width: 1024px) {
   .tutorial-content {
-    max-width: 500px;
+    max-width: 480px;
     padding: 32px 36px;
   }
 
